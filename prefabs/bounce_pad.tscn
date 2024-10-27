@@ -1,0 +1,56 @@
+[gd_scene load_steps=8 format=3 uid="uid://ngv2tutvwhpu"]
+
+[ext_resource type="Script" path="res://scripts/bounce_pad.gd" id="1_t4gsp"]
+[ext_resource type="Shader" path="res://shaders/main_shader.gdshader" id="2_du7i2"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_7vudc"]
+size = Vector3(2, 0.2, 2)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8qc2q"]
+render_priority = 0
+shader = ExtResource("2_du7i2")
+shader_parameter/roughness = null
+shader_parameter/metallic = null
+shader_parameter/color_start = Color(0.59785, 0.272703, 0.858123, 1)
+shader_parameter/color_end = Color(0.956863, 0.858824, 0.247059, 1)
+shader_parameter/gradient_dir = Vector3(0, 1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_btbwr"]
+size = Vector3(1.4, 0.2, 1.4)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6eevx"]
+render_priority = 0
+shader = ExtResource("2_du7i2")
+shader_parameter/roughness = null
+shader_parameter/metallic = null
+shader_parameter/color_start = Color(0.533519, 0.438907, 0.981127, 1)
+shader_parameter/color_end = Color(0.533333, 0.439216, 0.980392, 1)
+shader_parameter/gradient_dir = Vector3(0, -1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5ji8p"]
+size = Vector3(1.8, 0.9, 1.8)
+
+[node name="BouncePad" type="Node3D"]
+script = ExtResource("1_t4gsp")
+
+[node name="Base" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_7vudc")
+surface_material_override/0 = SubResource("ShaderMaterial_8qc2q")
+
+[node name="Bouncer" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0.1, 0)
+mesh = SubResource("BoxMesh_btbwr")
+surface_material_override/0 = SubResource("ShaderMaterial_6eevx")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.9407e-08, 0.35, -8.9407e-08)
+shape = SubResource("BoxShape3D_5ji8p")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

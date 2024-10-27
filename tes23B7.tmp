@@ -1,0 +1,88 @@
+[gd_scene load_steps=10 format=3 uid="uid://c4ijcrg56oes"]
+
+[ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="1_5ibiq"]
+[ext_resource type="Script" path="res://camera_3d.gd" id="2_hhvym"]
+[ext_resource type="Script" path="res://scripts/camera_area.gd" id="3_vsy4g"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mct75"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_nlry7"]
+sky_material = SubResource("ProceduralSkyMaterial_mct75")
+
+[sub_resource type="Environment" id="Environment_jjmam"]
+background_mode = 2
+sky = SubResource("Sky_nlry7")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_1mr3t"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ve7h7"]
+albedo_color = Color(0.15967, 0.15967, 0.15967, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_j43r3"]
+size = Vector3(32, 3, 20)
+
+[node name="TESTWORLD" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_jjmam")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Player" parent="." groups=["Player"] instance=ExtResource("1_5ibiq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 13)
+
+[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("player")]
+transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 9.39133, 7.48236, 24.9477)
+attributes = SubResource("CameraAttributesPractical_1mr3t")
+projection = 1
+fov = 9.11095
+size = 10.0
+near = 0.09
+script = ExtResource("2_hhvym")
+player = NodePath("../Player")
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1, 7)
+use_collision = true
+size = Vector3(2, 1, 2)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, 7)
+use_collision = true
+size = Vector3(2, 1, 2)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 2)
+use_collision = true
+size = Vector3(2, 1, 2)
+
+[node name="Ground" type="CSGBox3D" parent="World"]
+transform = Transform3D(0.3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11)
+material_override = SubResource("StandardMaterial3D_ve7h7")
+use_collision = true
+size = Vector3(50, 1, 28)
+
+[node name="Ground2" type="CSGBox3D" parent="World"]
+transform = Transform3D(0.3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -17)
+material_override = SubResource("StandardMaterial3D_ve7h7")
+use_collision = true
+size = Vector3(100, 1, 28)
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -17)
+script = ExtResource("3_vsy4g")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1, 4.5)
+shape = SubResource("BoxShape3D_j43r3")
+
+[connection signal="body_entered" from="Area3D" to="Area3D" method="_on_body_entered"]
+[connection signal="body_exited" from="Area3D" to="Area3D" method="_on_body_exited"]

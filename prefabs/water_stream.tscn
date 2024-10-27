@@ -1,0 +1,71 @@
+[gd_scene load_steps=10 format=3 uid="uid://dtuhnroda8knw"]
+
+[ext_resource type="Script" path="res://scripts/water_stream.gd" id="1_aewci"]
+[ext_resource type="Shader" path="res://shaders/water_stream.gdshader" id="2_31aio"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ubmcu"]
+size = Vector2(10, 2.8)
+subdivide_width = 100
+subdivide_depth = 100
+
+[sub_resource type="Gradient" id="Gradient_jc1ib"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_sw5eu"]
+gradient = SubResource("Gradient_jc1ib")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_bu61m"]
+frequency = 0.001
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mqabk"]
+noise = SubResource("FastNoiseLite_bu61m")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fqtvv"]
+render_priority = 0
+shader = ExtResource("2_31aio")
+shader_parameter/color = Color(0, 0.945098, 0.941176, 0.768627)
+shader_parameter/dissolve_threshold = 1.0
+shader_parameter/dissolve_texture = SubResource("GradientTexture1D_sw5eu")
+shader_parameter/noise_scale = 1.0
+shader_parameter/wave_amp = 0.05
+shader_parameter/wave_speed = 1.0
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_mqabk")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0y1ht"]
+size = Vector3(1.2, 0.6, 1.2)
+
+[node name="WaterStream" type="Node3D"]
+script = ExtResource("1_aewci")
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+size = Vector3(10, 1, 3)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+operation = 2
+size = Vector3(10, 1, 2.6)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.25, 0)
+size = Vector3(2, 1.5, 3)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.65, 0)
+operation = 2
+size = Vector3(1.2, 0.8, 1.2)
+
+[node name="Water" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+mesh = SubResource("PlaneMesh_ubmcu")
+surface_material_override/0 = SubResource("ShaderMaterial_fqtvv")
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.8, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+shape = SubResource("BoxShape3D_0y1ht")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
