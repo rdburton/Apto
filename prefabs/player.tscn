@@ -210,6 +210,7 @@ alpha_curve = SubResource("CurveTexture_o621m")
 [sub_resource type="QuadMesh" id="QuadMesh_mu5w2"]
 
 [node name="Player" type="CharacterBody3D"]
+floor_constant_speed = true
 script = ExtResource("1_xj306")
 speed = 4.0
 JUMP_VELOCITY = 5.0
@@ -244,3 +245,7 @@ amount = 60
 lifetime = 2.0
 process_material = SubResource("ParticleProcessMaterial_osbdv")
 draw_pass_1 = SubResource("QuadMesh_mu5w2")
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+target_position = Vector3(0, -2, 0)
+collide_with_areas = true

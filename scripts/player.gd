@@ -4,6 +4,7 @@ class_name Player extends CharacterBody3D
 @export var JUMP_VELOCITY := 4.5
 @export var dash_power := 20.0
 
+@onready var ray_cast_3d: RayCast3D = $RayCast3D
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var fire_particles: GPUParticles3D = $FireParticles
 @onready var water_particles: GPUParticles3D = $WaterParticles
@@ -19,6 +20,7 @@ var current_speed
 
 func _process(delta: float) -> void:
 	emit_fire()
+	check_raycast()
 
 func _physics_process(delta: float) -> void:
 	
@@ -57,7 +59,6 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-
 func handle_animations() -> void:
 	var current_animation_pos = animation_player.current_animation_position
 	var animation_length = animation_player.current_animation_length
@@ -81,8 +82,7 @@ func handle_animations() -> void:
 		elif is_playing_loop and current_animation_pos >= (animation_length - anim_near_end):
 			animation_player.stop()
 			is_playing_loop = false
-		
-		
+			
 func complete_level(next_level_file : String) -> void:
 	get_tree().change_scene_to_file(next_level_file)
 
@@ -96,3 +96,16 @@ func emit_fire() -> void:
 		water_particles.emitting = true
 	else:
 		water_particles.emitting = false
+
+func check_raycast() -> void:
+	var collider = ray_cast_3d.get_collider()
+	var platform_velocity
+	if collider != null:
+		if collider.get_parent() is Platform:
+			if collider.get_parent().has_method("get_platform_velocity"):
+				platform_velocity = collider.get_parent().get_platform_velocity()
+				
+			else:
+				platform_velocity = Vector3.ZERO
+		else:
+			platform_velocity = Vector3.ZERO
