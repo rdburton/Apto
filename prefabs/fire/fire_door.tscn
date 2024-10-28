@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://buwsntndf8lfq"]
 
-[ext_resource type="Script" path="res://scripts/fire_door.gd" id="1_uptht"]
+[ext_resource type="Script" path="res://scripts/fire/fire_door.gd" id="1_uptht"]
 [ext_resource type="Shader" path="res://shaders/fire_door.gdshader" id="2_qeqm0"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_fhauc"]

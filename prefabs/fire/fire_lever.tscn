@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://bhc8ej1tqup3b"]
 
-[ext_resource type="Script" path="res://scripts/fire_lever.gd" id="1_prpjc"]
+[ext_resource type="Script" path="res://scripts/fire/fire_lever.gd" id="1_prpjc"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cd7hw"]
 size = Vector3(1.6, 2.1, 2.6)

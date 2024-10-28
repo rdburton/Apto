@@ -17,13 +17,14 @@ var is_water = false
 var is_playing_loop = false
 var is_completed = false
 var current_speed 
+var platform_velocity: Vector3 = Vector3.ZERO
 
 func _process(delta: float) -> void:
-	emit_fire()
-	check_raycast()
+	emit_particles()
+	
 
 func _physics_process(delta: float) -> void:
-	
+	check_raycast()
 	handle_animations()
 	var current_velocity = get_velocity()
 	current_speed = speed
@@ -86,7 +87,7 @@ func handle_animations() -> void:
 func complete_level(next_level_file : String) -> void:
 	get_tree().change_scene_to_file(next_level_file)
 
-func emit_fire() -> void:
+func emit_particles() -> void:
 	if is_ablaze:
 		fire_particles.emitting = true
 	else:
@@ -99,12 +100,12 @@ func emit_fire() -> void:
 
 func check_raycast() -> void:
 	var collider = ray_cast_3d.get_collider()
-	var platform_velocity
+	platform_velocity = Vector3.ZERO
 	if collider != null:
 		if collider.get_parent() is Platform:
 			if collider.get_parent().has_method("get_platform_velocity"):
 				platform_velocity = collider.get_parent().get_platform_velocity()
-				
+				velocity += platform_velocity * 0.25
 			else:
 				platform_velocity = Vector3.ZERO
 		else:

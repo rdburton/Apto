@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://dtuhnroda8knw"]
 
-[ext_resource type="Script" path="res://scripts/water_stream.gd" id="1_aewci"]
+[ext_resource type="Script" path="res://scripts/water/water_stream.gd" id="1_aewci"]
 [ext_resource type="Shader" path="res://shaders/water_stream.gdshader" id="2_31aio"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ubmcu"]

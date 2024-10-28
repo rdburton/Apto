@@ -1,17 +1,17 @@
-[gd_scene load_steps=24 format=3 uid="uid://c4ijcrg56oes"]
+[gd_scene load_steps=23 format=3 uid="uid://c4ijcrg56oes"]
 
 [ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="1_wxgb5"]
-[ext_resource type="Script" path="res://scripts/camera_3d.gd" id="2_x1ch8"]
+[ext_resource type="PackedScene" uid="uid://w18n21kwqn3o" path="res://prefabs/camera_3d.tscn" id="2_v1b1u"]
 [ext_resource type="Shader" path="res://shaders/main_shader.gdshader" id="3_wbg1d"]
-[ext_resource type="PackedScene" uid="uid://ngv2tutvwhpu" path="res://prefabs/bounce_pad.tscn" id="4_tu6tx"]
+[ext_resource type="PackedScene" uid="uid://ngv2tutvwhpu" path="res://prefabs/water/bounce_pad.tscn" id="4_tu6tx"]
 [ext_resource type="Script" path="res://scripts/camera_area.gd" id="4_vhuy7"]
 [ext_resource type="PackedScene" uid="uid://c0ffp18hq14mj" path="res://prefabs/goal.tscn" id="6_kq6k1"]
-[ext_resource type="PackedScene" uid="uid://b24hiv1diqatt" path="res://prefabs/fire_pit.tscn" id="7_tt1oa"]
-[ext_resource type="PackedScene" uid="uid://bhc8ej1tqup3b" path="res://prefabs/fire_lever.tscn" id="8_y4fu4"]
-[ext_resource type="PackedScene" uid="uid://exighxogygqx" path="res://prefabs/fire_elevator.tscn" id="9_esncs"]
-[ext_resource type="PackedScene" uid="uid://buwsntndf8lfq" path="res://prefabs/fire_door.tscn" id="10_h5ta8"]
-[ext_resource type="PackedScene" uid="uid://pbosu7nrffl6" path="res://prefabs/water_pit.tscn" id="11_qw116"]
-[ext_resource type="PackedScene" uid="uid://dtuhnroda8knw" path="res://prefabs/water_stream.tscn" id="12_ooi4x"]
+[ext_resource type="PackedScene" uid="uid://b24hiv1diqatt" path="res://prefabs/fire/fire_pit.tscn" id="7_tt1oa"]
+[ext_resource type="PackedScene" uid="uid://bhc8ej1tqup3b" path="res://prefabs/fire/fire_lever.tscn" id="8_y4fu4"]
+[ext_resource type="PackedScene" uid="uid://exighxogygqx" path="res://prefabs/fire/fire_elevator.tscn" id="9_esncs"]
+[ext_resource type="PackedScene" uid="uid://buwsntndf8lfq" path="res://prefabs/fire/fire_door.tscn" id="10_h5ta8"]
+[ext_resource type="PackedScene" uid="uid://pbosu7nrffl6" path="res://prefabs/water/water_pit.tscn" id="11_qw116"]
+[ext_resource type="PackedScene" uid="uid://dtuhnroda8knw" path="res://prefabs/water/water_stream.tscn" id="12_ooi4x"]
 [ext_resource type="PackedScene" uid="uid://cdsi4krmf73ki" path="res://prefabs/platform.tscn" id="13_100v7"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mct75"]
@@ -26,8 +26,6 @@ background_mode = 2
 sky = SubResource("Sky_nlry7")
 tonemap_mode = 2
 glow_enabled = true
-
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_1mr3t"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1peak"]
 render_priority = 0
@@ -99,16 +97,7 @@ shadow_enabled = true
 [node name="Player" parent="." groups=["Player"] instance=ExtResource("1_wxgb5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 21)
 
-[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("player")]
-transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 9.39133, 7.48236, 17.9477)
-attributes = SubResource("CameraAttributesPractical_1mr3t")
-projection = 1
-fov = 9.11095
-size = 5.0
-near = 0.001
-script = ExtResource("2_x1ch8")
-player = NodePath("../Player")
-move_speed = 0.05
+[node name="Camera3D" parent="." instance=ExtResource("2_v1b1u")]
 
 [node name="World" type="Node3D" parent="."]
 
@@ -234,11 +223,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -1.5)
 block = NodePath("../../../WaterBlock")
 destination = NodePath("../../../WaterBlockDes")
 
-[node name="WaterBlockDes" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19, 0, -1.5)
-
 [node name="WaterBlock" parent="." instance=ExtResource("13_100v7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, -0.3, -1.4)
+
+[node name="WaterBlockDes" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19, 0, -1.5)
 
 [connection signal="body_entered" from="World/Space02/Area3D" to="World/Space02/Area3D" method="_on_body_entered"]
 [connection signal="body_exited" from="World/Space02/Area3D" to="World/Space02/Area3D" method="_on_body_exited"]

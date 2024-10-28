@@ -1,0 +1,185 @@
+[gd_scene load_steps=20 format=3 uid="uid://5vcqe2r5f4yo"]
+
+[ext_resource type="Texture2D" uid="uid://dnjx4hlgcmtsq" path="res://materials/prototype-texture-with-size.png" id="1_5102i"]
+[ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="2_helmv"]
+[ext_resource type="PackedScene" uid="uid://w18n21kwqn3o" path="res://prefabs/camera_3d.tscn" id="3_yai10"]
+[ext_resource type="Script" path="res://scripts/water/water_world_door.gd" id="4_c2wsf"]
+[ext_resource type="Shader" path="res://shaders/water_stream.gdshader" id="5_xnadb"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_uo0b4"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_1hyqf"]
+sky_material = SubResource("ProceduralSkyMaterial_uo0b4")
+
+[sub_resource type="Environment" id="Environment_qnhyi"]
+background_mode = 2
+sky = SubResource("Sky_1hyqf")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fhxoc"]
+albedo_texture = ExtResource("1_5102i")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qxxny"]
+albedo_texture = ExtResource("1_5102i")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_60fib"]
+albedo_texture = ExtResource("1_5102i")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2sa5c"]
+albedo_texture = ExtResource("1_5102i")
+uv1_triplanar = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cogyx"]
+size = Vector3(2, 4, 4)
+
+[sub_resource type="QuadMesh" id="QuadMesh_5edvw"]
+size = Vector2(4, 4)
+subdivide_width = 100
+subdivide_depth = 100
+
+[sub_resource type="Gradient" id="Gradient_w80sl"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_mrfhb"]
+gradient = SubResource("Gradient_w80sl")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_i1nhw"]
+frequency = 0.0024
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_nchn6"]
+noise = SubResource("FastNoiseLite_i1nhw")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yd4fg"]
+render_priority = 0
+shader = ExtResource("5_xnadb")
+shader_parameter/color = Color(0, 0.878431, 0.776471, 0.8)
+shader_parameter/dissolve_threshold = 0.0
+shader_parameter/dissolve_texture = SubResource("GradientTexture1D_mrfhb")
+shader_parameter/noise_scale = 0.2
+shader_parameter/wave_amp = 0.471
+shader_parameter/wave_speed = 0.2
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_nchn6")
+
+[node name="HubWorld" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_qnhyi")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Player" parent="." groups=["Player"] instance=ExtResource("2_helmv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.301515, 0)
+
+[node name="Camera3D" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_yai10")]
+transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.5, -0.707107, -0.353553, 0.612373, 9.39133, 7.48236, 17.9477)
+player = NodePath("../Player")
+
+[node name="Hub" type="CSGCombiner3D" parent="."]
+material_override = SubResource("StandardMaterial3D_fhxoc")
+use_collision = true
+
+[node name="BoundingBox" type="CSGBox3D" parent="Hub"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+material_override = SubResource("StandardMaterial3D_qxxny")
+size = Vector3(26, 8, 26)
+
+[node name="BoundingBoxCutout" type="CSGBox3D" parent="Hub"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+material_override = SubResource("StandardMaterial3D_qxxny")
+operation = 2
+size = Vector3(25, 8, 25)
+
+[node name="Ground" type="CSGBox3D" parent="Hub"]
+material_override = SubResource("StandardMaterial3D_qxxny")
+size = Vector3(25, 3, 25)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Hub/Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+material_override = SubResource("StandardMaterial3D_qxxny")
+operation = 2
+size = Vector3(14, 0.6, 14)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="Hub/Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+material_override = SubResource("StandardMaterial3D_60fib")
+operation = 2
+size = Vector3(12, 1.2, 12)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="Hub/Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+material_override = SubResource("StandardMaterial3D_qxxny")
+operation = 2
+size = Vector3(10, 1.8, 10)
+
+[node name="Ramp" type="CSGBox3D" parent="Hub/Ground"]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, -0.180358, -5.1)
+material_override = SubResource("StandardMaterial3D_2sa5c")
+use_collision = true
+size = Vector3(3, 5, 1)
+
+[node name="Ramp2" type="CSGBox3D" parent="Hub/Ground"]
+transform = Transform3D(-1, 7.57103e-08, -4.37114e-08, 0, 0.5, 0.866025, 8.74228e-08, 0.866025, -0.5, 0, -0.180358, 5.1)
+material_override = SubResource("StandardMaterial3D_2sa5c")
+use_collision = true
+size = Vector3(3, 5, 1)
+
+[node name="Ramp3" type="CSGBox3D" parent="Hub/Ground"]
+transform = Transform3D(-4.37114e-08, 0.866025, -0.5, 0, 0.5, 0.866025, 1, 3.78552e-08, -2.18557e-08, 5.1, -0.180358, 0)
+material_override = SubResource("StandardMaterial3D_2sa5c")
+use_collision = true
+size = Vector3(3, 5, 1)
+
+[node name="Ramp4" type="CSGBox3D" parent="Hub/Ground"]
+transform = Transform3D(-4.37114e-08, -0.866025, 0.5, 0, 0.5, 0.866025, -1, 3.78552e-08, -2.18557e-08, -5.1, -0.180358, 0)
+material_override = SubResource("StandardMaterial3D_2sa5c")
+use_collision = true
+size = Vector3(3, 5, 1)
+
+[node name="FireWorldBounding" type="CSGBox3D" parent="Hub"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.5, 0)
+size = Vector3(10, 6, 11)
+
+[node name="FireWorldCutout" type="CSGBox3D" parent="Hub"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.2, 4.05, 0)
+material_override = SubResource("StandardMaterial3D_qxxny")
+operation = 2
+size = Vector3(10, 5.1, 10)
+
+[node name="WaterWorldBounding" type="CSGBox3D" parent="Hub"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 3.5, -18)
+size = Vector3(10, 6, 11)
+
+[node name="WaterWorldCutout" type="CSGBox3D" parent="Hub"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 4.05, -17.2)
+material_override = SubResource("StandardMaterial3D_qxxny")
+operation = 2
+size = Vector3(10, 5.1, 10)
+
+[node name="WaterWorldDoorCutout" type="CSGBox3D" parent="Hub"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 3.5, -22.6)
+material_override = SubResource("StandardMaterial3D_qxxny")
+operation = 2
+size = Vector3(2, 4, 4)
+
+[node name="WWDoor" type="Node3D" parent="Hub"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 3.5, -22.6)
+script = ExtResource("4_c2wsf")
+next_level = "res://levels/water/ww_01.tscn"
+
+[node name="Area3D" type="Area3D" parent="Hub/WWDoor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hub/WWDoor/Area3D"]
+shape = SubResource("BoxShape3D_cogyx")
+
+[node name="WaterMesh" type="MeshInstance3D" parent="Hub/WWDoor"]
+transform = Transform3D(-4.37114e-08, -3.10588e-22, -1, 7.10543e-15, 1, -2.27069e-22, 1, 7.10543e-15, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("QuadMesh_5edvw")
+surface_material_override/0 = SubResource("ShaderMaterial_yd4fg")
+
+[connection signal="body_entered" from="Hub/WWDoor/Area3D" to="Hub/WWDoor" method="_on_area_3d_body_entered"]

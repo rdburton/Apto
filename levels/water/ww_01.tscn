@@ -1,0 +1,88 @@
+[gd_scene load_steps=10 format=3 uid="uid://bacrmca82ke7v"]
+
+[ext_resource type="Texture2D" uid="uid://dnjx4hlgcmtsq" path="res://materials/prototype-texture-with-size.png" id="1_dwy45"]
+[ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="2_mgkli"]
+[ext_resource type="PackedScene" uid="uid://w18n21kwqn3o" path="res://prefabs/camera_3d.tscn" id="3_v5wei"]
+[ext_resource type="PackedScene" uid="uid://c0ffp18hq14mj" path="res://prefabs/goal.tscn" id="4_ww7nq"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_s2m4h"]
+sky_top_color = Color(0.807843, 0.968627, 1, 1)
+sky_horizon_color = Color(0.984314, 0.870588, 0.760784, 1)
+sky_curve = 0.0891906
+ground_bottom_color = Color(0.410488, 0.912133, 1, 1)
+ground_horizon_color = Color(0.982396, 0.869169, 0.758878, 1)
+ground_curve = 0.077275
+
+[sub_resource type="Sky" id="Sky_tjah7"]
+sky_material = SubResource("ProceduralSkyMaterial_s2m4h")
+
+[sub_resource type="Environment" id="Environment_nnr66"]
+background_mode = 2
+background_color = Color(0.41858, 0.904372, 0.968227, 0.945098)
+sky = SubResource("Sky_tjah7")
+reflected_light_source = 1
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aljyu"]
+albedo_texture = ExtResource("1_dwy45")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s3hxg"]
+albedo_texture = ExtResource("1_dwy45")
+uv1_triplanar = true
+
+[node name="WW01" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_nnr66")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+light_energy = 0.8
+shadow_enabled = true
+
+[node name="Player" parent="." groups=["Player"] instance=ExtResource("2_mgkli")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.10152, 8.7)
+
+[node name="Camera3D" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_v5wei")]
+transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.5, -0.707107, -0.353553, 0.612373, 9.39133, 7.48236, 17.9477)
+player = NodePath("../Player")
+
+[node name="Ground" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.5)
+material_override = SubResource("StandardMaterial3D_aljyu")
+use_collision = true
+size = Vector3(10, 1, 26)
+
+[node name="Ground2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.5)
+material_override = SubResource("StandardMaterial3D_aljyu")
+use_collision = true
+size = Vector3(2, 1, 2)
+
+[node name="Ground3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -5)
+material_override = SubResource("StandardMaterial3D_aljyu")
+use_collision = true
+size = Vector3(2, 2, 2)
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -12.5)
+material_override = SubResource("StandardMaterial3D_s3hxg")
+use_collision = true
+
+[node name="Ground4" type="CSGBox3D" parent="CSGCombiner3D"]
+material_override = SubResource("StandardMaterial3D_aljyu")
+use_collision = true
+size = Vector3(6, 3, 6)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1.1)
+operation = 2
+radius = 1.5
+sides = 64
+
+[node name="Goal" parent="." instance=ExtResource("4_ww7nq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, -13.6)
+next_level = "res://levels/water/ww_02.tscn"

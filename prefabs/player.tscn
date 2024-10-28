@@ -213,7 +213,7 @@ alpha_curve = SubResource("CurveTexture_o621m")
 floor_constant_speed = true
 script = ExtResource("1_xj306")
 speed = 4.0
-JUMP_VELOCITY = 5.0
+JUMP_VELOCITY = 6.0
 dash_power = 50.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

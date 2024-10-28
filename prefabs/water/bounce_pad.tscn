@@ -1,0 +1,103 @@
+[gd_scene load_steps=14 format=3 uid="uid://ngv2tutvwhpu"]
+
+[ext_resource type="Script" path="res://scripts/water/bounce_pad.gd" id="1_t4gsp"]
+[ext_resource type="Shader" path="res://shaders/main_shader.gdshader" id="2_du7i2"]
+[ext_resource type="Texture2D" uid="uid://bbewndpas8t7b" path="res://alphas/RainSplash.png" id="3_52jd2"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_7vudc"]
+size = Vector3(2, 0.2, 2)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8qc2q"]
+render_priority = 0
+shader = ExtResource("2_du7i2")
+shader_parameter/roughness = null
+shader_parameter/metallic = null
+shader_parameter/color_start = Color(0.427451, 0.894118, 0.858824, 1)
+shader_parameter/color_end = Color(0.72549, 0.894118, 0.858824, 1)
+shader_parameter/gradient_dir = Vector3(0, 1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_btbwr"]
+size = Vector3(1.4, 0.2, 1.4)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6eevx"]
+render_priority = 0
+shader = ExtResource("2_du7i2")
+shader_parameter/roughness = null
+shader_parameter/metallic = null
+shader_parameter/color_start = Color(0.427451, 0.894118, 0.858824, 1)
+shader_parameter/color_end = Color(0.72549, 0.894118, 0.858824, 1)
+shader_parameter/gradient_dir = Vector3(0, -1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5ji8p"]
+size = Vector3(1.8, 0.9, 1.8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ftpr"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.572549, 1, 1, 0.364706)
+albedo_texture = ExtResource("3_52jd2")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_b10ar"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -3.60989, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_hr328"]
+curve = SubResource("Curve_b10ar")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ubb2i"]
+emission_shape = 2
+emission_sphere_radius = 0.25
+direction = Vector3(0, 1, 0)
+spread = 5.0
+initial_velocity_min = 6.0
+initial_velocity_max = 6.0
+gravity = Vector3(0, -1, 0)
+scale_min = 0.1
+scale_max = 0.3
+alpha_curve = SubResource("CurveTexture_hr328")
+
+[sub_resource type="QuadMesh" id="QuadMesh_xqgf8"]
+
+[node name="WaterBouncePad" type="Node3D"]
+script = ExtResource("1_t4gsp")
+bounce_power = 12.0
+
+[node name="Base" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_7vudc")
+surface_material_override/0 = SubResource("ShaderMaterial_8qc2q")
+
+[node name="Bouncer" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0.1, 0)
+mesh = SubResource("BoxMesh_btbwr")
+surface_material_override/0 = SubResource("ShaderMaterial_6eevx")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.9407e-08, 0.35, -8.9407e-08)
+shape = SubResource("BoxShape3D_5ji8p")
+
+[node name="WaterParticles" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+material_override = SubResource("StandardMaterial3D_7ftpr")
+emitting = false
+amount = 200
+lifetime = 3.0
+speed_scale = 1.5
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_ubb2i")
+draw_pass_1 = SubResource("QuadMesh_xqgf8")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

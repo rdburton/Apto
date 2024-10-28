@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://exighxogygqx"]
 
-[ext_resource type="Script" path="res://scripts/fire_elevator.gd" id="1_kb88h"]
+[ext_resource type="Script" path="res://scripts/fire/fire_elevator.gd" id="1_kb88h"]
 
 [sub_resource type="Curve" id="Curve_tcfu7"]
 max_value = 0.05
