@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://dtuhnroda8knw"]
+[gd_scene load_steps=16 format=3 uid="uid://dtuhnroda8knw"]
 
 [ext_resource type="Script" path="res://scripts/water/water_stream.gd" id="1_aewci"]
 [ext_resource type="Shader" path="res://shaders/water_stream.gdshader" id="2_31aio"]
+[ext_resource type="Texture2D" uid="uid://bbewndpas8t7b" path="res://alphas/RainSplash.png" id="3_3rfui"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ubmcu"]
 size = Vector2(10, 2.8)
@@ -32,6 +33,37 @@ shader_parameter/noise_texture = SubResource("NoiseTexture2D_mqabk")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0y1ht"]
 size = Vector3(1.2, 0.6, 1.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rh5x3"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.572549, 1, 1, 0.364706)
+albedo_texture = ExtResource("3_3rfui")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_mq3iq"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -3.60989, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_tdk1m"]
+curve = SubResource("Curve_mq3iq")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tw77g"]
+direction = Vector3(0, 1, 0)
+initial_velocity_min = 1.5
+initial_velocity_max = 1.5
+gravity = Vector3(0, -1, 0)
+scale_min = 0.1
+scale_max = 0.3
+alpha_curve = SubResource("CurveTexture_tdk1m")
+
+[sub_resource type="QuadMesh" id="QuadMesh_nptbf"]
 
 [node name="WaterStream" type="Node3D"]
 script = ExtResource("1_aewci")
@@ -67,5 +99,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.8, 0)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
 shape = SubResource("BoxShape3D_0y1ht")
+
+[node name="WaterParticles" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.7, 0)
+material_override = SubResource("StandardMaterial3D_rh5x3")
+emitting = false
+amount = 60
+lifetime = 2.0
+process_material = SubResource("ParticleProcessMaterial_tw77g")
+draw_pass_1 = SubResource("QuadMesh_nptbf")
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

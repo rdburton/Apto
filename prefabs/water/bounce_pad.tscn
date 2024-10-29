@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://ngv2tutvwhpu"]
+[gd_scene load_steps=19 format=3 uid="uid://ngv2tutvwhpu"]
 
 [ext_resource type="Script" path="res://scripts/water/bounce_pad.gd" id="1_t4gsp"]
 [ext_resource type="Shader" path="res://shaders/main_shader.gdshader" id="2_du7i2"]
@@ -69,6 +69,37 @@ alpha_curve = SubResource("CurveTexture_hr328")
 
 [sub_resource type="QuadMesh" id="QuadMesh_xqgf8"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sybxf"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.572549, 1, 1, 0.364706)
+albedo_texture = ExtResource("3_52jd2")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_83fpi"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -3.60989, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_o621m"]
+curve = SubResource("Curve_83fpi")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_x7b30"]
+direction = Vector3(0, 1, 0)
+initial_velocity_min = 1.5
+initial_velocity_max = 1.5
+gravity = Vector3(0, -1, 0)
+scale_min = 0.1
+scale_max = 0.3
+alpha_curve = SubResource("CurveTexture_o621m")
+
+[sub_resource type="QuadMesh" id="QuadMesh_vk7if"]
+
 [node name="WaterBouncePad" type="Node3D"]
 script = ExtResource("1_t4gsp")
 bounce_power = 12.0
@@ -98,6 +129,15 @@ speed_scale = 1.5
 fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_ubb2i")
 draw_pass_1 = SubResource("QuadMesh_xqgf8")
+
+[node name="WaterParticles2" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+material_override = SubResource("StandardMaterial3D_sybxf")
+emitting = false
+amount = 60
+lifetime = 2.0
+process_material = SubResource("ParticleProcessMaterial_x7b30")
+draw_pass_1 = SubResource("QuadMesh_vk7if")
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
 [connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

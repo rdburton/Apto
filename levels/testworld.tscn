@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://c4ijcrg56oes"]
+[gd_scene load_steps=24 format=3 uid="uid://c4ijcrg56oes"]
 
 [ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="1_wxgb5"]
 [ext_resource type="PackedScene" uid="uid://w18n21kwqn3o" path="res://prefabs/camera_3d.tscn" id="2_v1b1u"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://pbosu7nrffl6" path="res://prefabs/water/water_pit.tscn" id="11_qw116"]
 [ext_resource type="PackedScene" uid="uid://dtuhnroda8knw" path="res://prefabs/water/water_stream.tscn" id="12_ooi4x"]
 [ext_resource type="PackedScene" uid="uid://cdsi4krmf73ki" path="res://prefabs/platform.tscn" id="13_100v7"]
+[ext_resource type="PackedScene" uid="uid://dl3kebpuep0yu" path="res://prefabs/moving_block.tscn" id="14_lm5k3"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mct75"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -137,7 +138,6 @@ size = Vector3(2, 1, 2)
 
 [node name="BouncePad" parent="World/Space02" instance=ExtResource("4_tu6tx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 14)
-bounce_power = 12.0
 
 [node name="Ground2" type="CSGBox3D" parent="World/Space02"]
 transform = Transform3D(0.3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -17)
@@ -228,6 +228,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, -0.3, -1.4)
 
 [node name="WaterBlockDes" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19, 0, -1.5)
+
+[node name="MovingBlock" parent="." instance=ExtResource("14_lm5k3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -7)
 
 [connection signal="body_entered" from="World/Space02/Area3D" to="World/Space02/Area3D" method="_on_body_entered"]
 [connection signal="body_exited" from="World/Space02/Area3D" to="World/Space02/Area3D" method="_on_body_exited"]

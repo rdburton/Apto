@@ -1,0 +1,270 @@
+[gd_scene load_steps=22 format=3 uid="uid://buba4qn23a1hk"]
+
+[ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="1_3wuf0"]
+[ext_resource type="PackedScene" uid="uid://w18n21kwqn3o" path="res://prefabs/camera_3d.tscn" id="2_hgaau"]
+[ext_resource type="Texture2D" uid="uid://dnjx4hlgcmtsq" path="res://materials/prototype-texture-with-size.png" id="3_gwv3u"]
+[ext_resource type="Shader" path="res://shaders/main_shader.gdshader" id="3_oq2f2"]
+[ext_resource type="PackedScene" uid="uid://c0ffp18hq14mj" path="res://prefabs/goal.tscn" id="4_odpv3"]
+[ext_resource type="PackedScene" uid="uid://pbosu7nrffl6" path="res://prefabs/water/water_pit.tscn" id="5_qsstf"]
+[ext_resource type="PackedScene" uid="uid://dtuhnroda8knw" path="res://prefabs/water/water_stream.tscn" id="6_g1cv5"]
+[ext_resource type="PackedScene" uid="uid://cdsi4krmf73ki" path="res://prefabs/platform.tscn" id="7_rv2ql"]
+[ext_resource type="PackedScene" uid="uid://dl3kebpuep0yu" path="res://prefabs/moving_block.tscn" id="8_55g63"]
+[ext_resource type="PackedScene" uid="uid://ngv2tutvwhpu" path="res://prefabs/water/bounce_pad.tscn" id="10_f1pet"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_r3prr"]
+sky_top_color = Color(0.807843, 0.968627, 1, 1)
+sky_horizon_color = Color(0.984314, 0.870588, 0.760784, 1)
+sky_curve = 0.0891906
+ground_bottom_color = Color(0.410488, 0.912133, 1, 1)
+ground_horizon_color = Color(0.982396, 0.869169, 0.758878, 1)
+ground_curve = 0.077275
+
+[sub_resource type="Sky" id="Sky_eg547"]
+sky_material = SubResource("ProceduralSkyMaterial_r3prr")
+
+[sub_resource type="Environment" id="Environment_gv2y1"]
+background_mode = 2
+background_color = Color(0.41858, 0.904372, 0.968227, 0.945098)
+sky = SubResource("Sky_eg547")
+reflected_light_source = 1
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="Shader" id="Shader_k8pu8"]
+code = "shader_type spatial;
+
+uniform float roughness : hint_range(0.0, 1.0, 0.1);
+uniform float metallic : hint_range(0.0, 1.0, 0.1);
+
+uniform vec4 color_start : source_color = vec4(1.0, 0.6, 0.6, 1.0);
+uniform vec4 color_end : source_color = vec4(1.0, 0.85, 0.65, 1.0);
+uniform vec3 gradient_dir = vec3(0.0);
+
+uniform float min_value = -1.0;
+uniform float max_value = 1.0;
+
+void fragment()
+{
+	float t = dot(VERTEX, gradient_dir);
+	t = (t - min_value) / (max_value - min_value);
+	t = clamp(t, 0.0, 1.0);
+	
+	vec4 color = mix(color_start, color_end, t);
+	
+	ALBEDO = color.rgb;
+	ROUGHNESS = roughness;
+	METALLIC = metallic;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iallw"]
+render_priority = 0
+shader = SubResource("Shader_k8pu8")
+shader_parameter/roughness = null
+shader_parameter/metallic = null
+shader_parameter/color_start = Color(0.164706, 0.694118, 0.870588, 1)
+shader_parameter/color_end = Color(0.364706, 0.858824, 0.670588, 1)
+shader_parameter/gradient_dir = Vector3(0, 1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hfc0x"]
+render_priority = 0
+shader = SubResource("Shader_k8pu8")
+shader_parameter/roughness = null
+shader_parameter/metallic = null
+shader_parameter/color_start = Color(0.164706, 0.694118, 0.870588, 1)
+shader_parameter/color_end = Color(0.364706, 0.858824, 0.670588, 1)
+shader_parameter/gradient_dir = Vector3(0, -1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_60o1k"]
+render_priority = 0
+shader = SubResource("Shader_k8pu8")
+shader_parameter/roughness = null
+shader_parameter/metallic = null
+shader_parameter/color_start = Color(0.164706, 0.694118, 0.870588, 1)
+shader_parameter/color_end = Color(0.364706, 0.858824, 0.670588, 1)
+shader_parameter/gradient_dir = Vector3(0, -1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kkcdp"]
+render_priority = 0
+shader = SubResource("Shader_k8pu8")
+shader_parameter/roughness = null
+shader_parameter/metallic = null
+shader_parameter/color_start = Color(0.164706, 0.694118, 0.870588, 1)
+shader_parameter/color_end = Color(0.364706, 0.858824, 0.670588, 1)
+shader_parameter/gradient_dir = Vector3(0, -1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_86yx5"]
+render_priority = 0
+shader = ExtResource("3_oq2f2")
+shader_parameter/roughness = null
+shader_parameter/metallic = null
+shader_parameter/color_start = Color(0.164706, 0.694118, 0.870588, 1)
+shader_parameter/color_end = Color(0.364706, 0.858824, 0.670588, 1)
+shader_parameter/gradient_dir = Vector3(0, 1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s3hxg"]
+albedo_texture = ExtResource("3_gwv3u")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aljyu"]
+albedo_texture = ExtResource("3_gwv3u")
+uv1_triplanar = true
+
+[node name="WW10" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_gv2y1")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+light_energy = 0.8
+shadow_enabled = true
+
+[node name="Player" parent="." groups=["Player"] instance=ExtResource("1_3wuf0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1.102, 7)
+
+[node name="Camera3D" parent="." node_paths=PackedStringArray("player") instance=ExtResource("2_hgaau")]
+transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.5, -0.707107, -0.353553, 0.612373, 9.39133, 7.48236, 17.9477)
+player = NodePath("../Player")
+
+[node name="Ground" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 7.5)
+material_override = SubResource("ShaderMaterial_iallw")
+use_collision = true
+size = Vector3(8, 1, 8)
+
+[node name="Ground2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -2, -1.5)
+material_override = SubResource("ShaderMaterial_hfc0x")
+use_collision = true
+size = Vector3(2, 5, 2)
+
+[node name="Ground12" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 4, -1.5)
+material_override = SubResource("ShaderMaterial_hfc0x")
+use_collision = true
+size = Vector3(3, 5, 3)
+
+[node name="Ground14" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 4, -6.5)
+material_override = SubResource("ShaderMaterial_hfc0x")
+use_collision = true
+size = Vector3(3, 5, 3)
+
+[node name="Ground4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, -1.5, -6.5)
+material_override = SubResource("ShaderMaterial_hfc0x")
+use_collision = true
+size = Vector3(3, 6, 2)
+
+[node name="Ground5" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -1.5, -6.5)
+material_override = SubResource("ShaderMaterial_hfc0x")
+use_collision = true
+size = Vector3(2, 6, 2)
+
+[node name="Ground8" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.5, -4.5)
+material_override = SubResource("ShaderMaterial_iallw")
+use_collision = true
+size = Vector3(0.2, 0.2, 5)
+
+[node name="Ground9" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.5, 0.5)
+material_override = SubResource("ShaderMaterial_iallw")
+use_collision = true
+size = Vector3(0.2, 0.2, 5)
+
+[node name="Ground13" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.5, 9.5)
+material_override = SubResource("ShaderMaterial_iallw")
+use_collision = true
+size = Vector3(0.2, 0.2, 5)
+
+[node name="Ground6" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -1, -1.5)
+material_override = SubResource("ShaderMaterial_hfc0x")
+use_collision = true
+size = Vector3(2, 7, 2)
+
+[node name="Ground7" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, 5)
+material_override = SubResource("ShaderMaterial_60o1k")
+use_collision = true
+size = Vector3(2, 8, 7)
+
+[node name="Ground10" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.5, 12.5)
+material_override = SubResource("ShaderMaterial_kkcdp")
+use_collision = true
+size = Vector3(10, 8, 2)
+
+[node name="Ground11" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, -0.5, 8)
+material_override = SubResource("ShaderMaterial_kkcdp")
+use_collision = true
+size = Vector3(10, 8, 11)
+
+[node name="Ground3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 3)
+material_override = SubResource("ShaderMaterial_86yx5")
+use_collision = true
+size = Vector3(2, 1, 1)
+
+[node name="Tower" type="CSGCombiner3D" parent="."]
+transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -14.5, 2.4, -17.5)
+material_override = SubResource("StandardMaterial3D_s3hxg")
+use_collision = true
+
+[node name="Block" type="CSGBox3D" parent="Tower"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 2.1, 1.5)
+material_override = SubResource("StandardMaterial3D_aljyu")
+use_collision = true
+size = Vector3(3, 4, 9)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Tower"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 3.5, -1.1)
+operation = 2
+radius = 1.5
+sides = 64
+
+[node name="Goal" parent="Tower" instance=ExtResource("4_odpv3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 3.8, -1.1)
+
+[node name="WaterPit" parent="." instance=ExtResource("5_qsstf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.8, 3.7, 9.9)
+
+[node name="WaterStream" parent="." node_paths=PackedStringArray("block", "destination") instance=ExtResource("6_g1cv5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 1)
+block = NodePath("../WaterBlock")
+destination = NodePath("Node3D")
+
+[node name="Node3D" type="Node3D" parent="WaterStream"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
+
+[node name="WaterBlock" parent="." instance=ExtResource("7_rv2ql")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, -0.3, 1)
+
+[node name="MovingBlock" parent="." instance=ExtResource("8_55g63")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.8, 1)
+
+[node name="MovingBlock2" parent="." instance=ExtResource("8_55g63")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.8, -4)
+wait_time = 1.4
+
+[node name="MovingBlock3" parent="." instance=ExtResource("8_55g63")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 7.8, -9.9)
+wait_time = 1.4
+
+[node name="WaterBouncePad" parent="." instance=ExtResource("10_f1pet")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 3.6, 5)

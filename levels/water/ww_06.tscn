@@ -45,17 +45,17 @@ light_energy = 0.8
 shadow_enabled = true
 
 [node name="Player" parent="." groups=["Player"] instance=ExtResource("1_jnvko")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.10152, 4.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.10152, 4.7)
 
 [node name="Camera3D" parent="." node_paths=PackedStringArray("player") instance=ExtResource("2_pikur")]
 transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.5, -0.707107, -0.353553, 0.612373, 9.39133, 7.48236, 17.9477)
 player = NodePath("../Player")
 
 [node name="Ground" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -4)
 material_override = SubResource("StandardMaterial3D_aljyu")
 use_collision = true
-size = Vector3(15, 1, 23)
+size = Vector3(6, 1, 23)
 
 [node name="Ground2" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, -3)

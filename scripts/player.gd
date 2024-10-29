@@ -9,13 +9,16 @@ class_name Player extends CharacterBody3D
 @onready var fire_particles: GPUParticles3D = $FireParticles
 @onready var water_particles: GPUParticles3D = $WaterParticles
 
+var dash_counter := 0
+var total_dashes := 2
 var movement_weight := 1.0
-var zoom_camera = false
-var is_bouncing = false
-var is_ablaze = false
-var is_water = false
-var is_playing_loop = false
-var is_completed = false
+var zoom_camera := false
+var has_double_dashed := false
+var is_bouncing := false
+var is_ablaze := false
+var is_water := false
+var is_playing_loop := false
+var is_completed := false
 var current_speed 
 var platform_velocity: Vector3 = Vector3.ZERO
 
@@ -47,16 +50,19 @@ func _physics_process(delta: float) -> void:
 	if is_on_floor():
 		if velocity.y <= 0:
 			is_bouncing = false
+			dash_counter = 0
 			
 	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 		movement_weight = 0.2
-		if Input.is_action_just_pressed("air_dash"):
-			if velocity.length() > 0:
-				var velocity_horizontal = Vector3(velocity.x, 0.0, velocity.z)
-				var velocity_direction = velocity_horizontal.normalized()
-				velocity += lerp(velocity_direction, direction * dash_power, 1.0)
+		if Input.is_action_just_pressed("air_dash") and !has_double_dashed:
+			if dash_counter < total_dashes:
+				if velocity.length() > 0:
+					var velocity_horizontal = Vector3(velocity.x, 0.0, velocity.z)
+					var velocity_direction = velocity_horizontal.normalized()
+					velocity += lerp(velocity_direction, direction * dash_power, 1.0)
+					dash_counter += 1
 
 	move_and_slide()
 

@@ -195,7 +195,7 @@ particles_anim_loop = false
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -3.60989, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_o621m"]
+[sub_resource type="CurveTexture" id="CurveTexture_1ix1c"]
 curve = SubResource("Curve_jhln3")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_osbdv"]
@@ -205,7 +205,7 @@ initial_velocity_max = 1.5
 gravity = Vector3(0, -1, 0)
 scale_min = 0.1
 scale_max = 0.3
-alpha_curve = SubResource("CurveTexture_o621m")
+alpha_curve = SubResource("CurveTexture_1ix1c")
 
 [sub_resource type="QuadMesh" id="QuadMesh_mu5w2"]
 

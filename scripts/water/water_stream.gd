@@ -3,7 +3,9 @@ extends Node3D
 @export var block : Node3D
 @export var destination : Node3D
 @export var move_speed := 0.1
+
 @onready var water: MeshInstance3D = $Water
+@onready var water_particles: GPUParticles3D = $WaterParticles
 
 var is_water = false
 var dissolve_speed := 0.2
@@ -12,9 +14,9 @@ var dissolve_threshold := 1.0
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Player") and body.is_water:
-		print("transferring water")
 		body.is_water = false
 		is_water = true
+		water_particles.emitting = true
 		
 func _process(delta: float) -> void:
 	if is_water:
