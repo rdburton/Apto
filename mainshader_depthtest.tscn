@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://bl6ntbq7ikhu4"]
+
+[ext_resource type="Shader" path="res://shaders/main_shader.gdshader" id="1_kg3fb"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5y3uf"]
+render_priority = 0
+shader = ExtResource("1_kg3fb")
+shader_parameter/roughness = null
+shader_parameter/metallic = null
+shader_parameter/color_start = Color(0, 0.654902, 0.988235, 1)
+shader_parameter/color_end = Color(0.0588235, 0.85098, 0.65098, 1)
+shader_parameter/gradient_dir = Vector3(0, 1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+shader_parameter/start_color = Color(0.0352941, 1, 1, 1)
+shader_parameter/end_color = Color(1, 1, 1, 1)
+shader_parameter/near_distance = 0.0
+shader_parameter/far_distance = 50.0
+
+[node name="Node3D" type="Node3D"]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+material_override = SubResource("ShaderMaterial_5y3uf")
+size = Vector3(5, 5, 5)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.26612, 0, -6.10345)
+material_override = SubResource("ShaderMaterial_5y3uf")
+size = Vector3(5, 5, 5)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.3801, 4.76837e-07, -14.3446)
+material_override = SubResource("ShaderMaterial_5y3uf")
+size = Vector3(5, 5, 5)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.1461, 0, -22.236)
+material_override = SubResource("ShaderMaterial_5y3uf")
+size = Vector3(5, 5, 5)

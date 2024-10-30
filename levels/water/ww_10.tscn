@@ -77,19 +77,20 @@ shader_parameter/gradient_dir = Vector3(0, -1, 0)
 shader_parameter/min_value = -1.0
 shader_parameter/max_value = 1.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_60o1k"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7xbk3"]
 render_priority = 0
 shader = ExtResource("3_oq2f2")
 shader_parameter/roughness = null
 shader_parameter/metallic = null
-shader_parameter/color_start = Color(0.164706, 0.694118, 0.870588, 1)
-shader_parameter/color_end = Color(0.164706, 0.694118, 0.870588, 1)
+shader_parameter/color_start = Color(0, 0.54902, 0.909804, 1)
+shader_parameter/color_end = Color(0, 0.403922, 1, 1)
 shader_parameter/gradient_dir = Vector3(0, -1, 0)
 shader_parameter/min_value = -1.0
 shader_parameter/max_value = 1.0
-shader_parameter/fade_start = 5.0
-shader_parameter/fade_end = 10.0
-shader_parameter/fade_color = Color(0.941176, 0, 0.92549, 1)
+shader_parameter/start_color = Color(0.0386596, 0.488261, 0.675479, 1)
+shader_parameter/end_color = Color(1, 1, 1, 1)
+shader_parameter/near_distance = 0.0
+shader_parameter/far_distance = 50.0
 
 [sub_resource type="Shader" id="Shader_bwsns"]
 code = "shader_type spatial;
@@ -150,9 +151,10 @@ shader_parameter/color_end = Color(0.364706, 0.858824, 0.670588, 1)
 shader_parameter/gradient_dir = Vector3(0, 1, 0)
 shader_parameter/min_value = -1.0
 shader_parameter/max_value = 1.0
-shader_parameter/fade_start = 10.0
-shader_parameter/fade_end = 50.0
-shader_parameter/fade_color = Color(0, 0, 0, 0)
+shader_parameter/start_color = Color(0, 0, 0, 0)
+shader_parameter/end_color = Color(0, 0, 0, 0)
+shader_parameter/near_distance = 0.0
+shader_parameter/far_distance = 50.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s3hxg"]
 albedo_texture = ExtResource("3_gwv3u")
@@ -241,7 +243,7 @@ size = Vector3(2, 7, 2)
 
 [node name="Ground7" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, 5)
-material_override = SubResource("ShaderMaterial_60o1k")
+material_override = SubResource("ShaderMaterial_7xbk3")
 use_collision = true
 size = Vector3(2, 8, 7)
 

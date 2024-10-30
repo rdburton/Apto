@@ -8,7 +8,7 @@ uniform float outline_power : hint_range(0.0, 5.0, 0.1) = 2.0;
 void fragment()
 {
 	float fresnel = pow(1.0 - dot(NORMAL, VIEW), outline_power);
-	
+
 	ALBEDO = mix(color.rgb, outline_color.rgb, fresnel * outline_intensity);
 }
 
