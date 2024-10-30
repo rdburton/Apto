@@ -64,7 +64,7 @@ use_collision = true
 size = Vector3(6, 2, 5)
 
 [node name="Ground3" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2, -3)
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -13, 2, -3)
 material_override = SubResource("StandardMaterial3D_aljyu")
 use_collision = true
 size = Vector3(6, 3, 5)
@@ -91,7 +91,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 5.8, -12.6)
 next_level = "res://levels/water/ww_07.tscn"
 
 [node name="WaterPit" parent="." instance=ExtResource("5_mj3uj")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 3.7, -3)
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -14, 3.7, -3)
 
 [node name="WaterBouncePad" parent="." instance=ExtResource("6_gx8rp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2.6, -4)

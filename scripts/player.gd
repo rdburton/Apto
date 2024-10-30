@@ -67,10 +67,14 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func handle_animations() -> void:
-	var current_animation_pos = animation_player.current_animation_position
-	var animation_length = animation_player.current_animation_length
+	var animation_length = 0.0
 	var	anim_near_end := 0.1
+	var current_animation_pos = 0.0
 	
+	if animation_player.is_playing():
+		current_animation_pos = animation_player.current_animation_position
+		animation_length = animation_player.current_animation_length
+		
 	if Input.is_action_pressed("move_forward"):
 		animation_player.play("Forward")
 		is_playing_loop = false
@@ -89,7 +93,7 @@ func handle_animations() -> void:
 		elif is_playing_loop and current_animation_pos >= (animation_length - anim_near_end):
 			animation_player.stop()
 			is_playing_loop = false
-			
+		
 func complete_level(next_level_file : String) -> void:
 	get_tree().change_scene_to_file(next_level_file)
 

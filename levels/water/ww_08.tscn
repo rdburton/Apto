@@ -89,6 +89,7 @@ use_collision = true
 
 [node name="Goal" parent="Tower" instance=ExtResource("4_uc2c8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 3.8, -1.1)
+next_level = "res://levels/water/ww_09.tscn"
 
 [node name="Block" type="CSGBox3D" parent="Tower"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -0.7, 0)

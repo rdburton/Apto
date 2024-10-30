@@ -11,23 +11,24 @@ func _process(delta: float) -> void:
 	_handle_zoom()
 	#look_at(player.global_position, Vector3.UP, false)
 	
+	
 	#Handle camera X movement
 	if player.velocity.x > 0:
 		global_position.x = lerp(global_position.x, (player.global_position.x + camera_offset), move_speed)
-	elif player.velocity.x < 0:
+	if player.velocity.x < 0:
 		global_position.x = lerp(global_position.x, (player.global_position.x + camera_offset), move_speed)	
 
 	#Handle camera Y movement
 	#if player.is_bouncing == true:
 	if player.velocity.y > 0:
 		global_position.y = lerp(global_position.y, (player.global_position.y + camera_offset), move_speed)
-	elif player.velocity.y < 0:
+	if player.velocity.y < 0:
 		global_position.y = lerp(global_position.y, (player.global_position.y + camera_offset), move_speed)
 	
 	#Handle camera Z movement
 	if player.velocity.z > 0:
 		global_position.z = lerp(global_position.z, (player.global_position.z + camera_offset), move_speed)
-	elif player.velocity.z < 0:
+	if player.velocity.z < 0:
 		global_position.z = lerp(global_position.z, (player.global_position.z + camera_offset), move_speed)
 		
 	#Reset camera position

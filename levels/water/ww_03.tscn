@@ -122,7 +122,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.3, -13.6)
 next_level = "res://levels/water/ww_04.tscn"
 
 [node name="WaterPit" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 3)
 script = ExtResource("5_nduoa")
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="WaterPit"]

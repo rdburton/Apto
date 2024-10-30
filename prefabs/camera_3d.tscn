@@ -4,13 +4,12 @@
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_1mr3t"]
 
-[node name="Camera3D" type="Camera3D" node_paths=PackedStringArray("player")]
+[node name="Camera3D" type="Camera3D"]
 transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 9.39133, 7.48236, 17.9477)
 attributes = SubResource("CameraAttributesPractical_1mr3t")
 projection = 1
 fov = 9.11095
-size = 5.0
+size = 7.0
 near = 0.001
 script = ExtResource("1_6mv25")
-player = NodePath("")
 move_speed = 0.05

@@ -1,10 +1,12 @@
-[gd_scene load_steps=11 format=3 uid="uid://c5cyk1nuyfuxp"]
+[gd_scene load_steps=13 format=3 uid="uid://c5cyk1nuyfuxp"]
 
 [ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="1_6lqy3"]
 [ext_resource type="PackedScene" uid="uid://w18n21kwqn3o" path="res://prefabs/camera_3d.tscn" id="2_nrq8e"]
 [ext_resource type="Texture2D" uid="uid://dnjx4hlgcmtsq" path="res://materials/prototype-texture-with-size.png" id="3_k633o"]
 [ext_resource type="PackedScene" uid="uid://c0ffp18hq14mj" path="res://prefabs/goal.tscn" id="4_2u8q5"]
 [ext_resource type="PackedScene" uid="uid://dl3kebpuep0yu" path="res://prefabs/moving_block.tscn" id="5_um12q"]
+[ext_resource type="PackedScene" uid="uid://ngv2tutvwhpu" path="res://prefabs/water/bounce_pad.tscn" id="6_gpocu"]
+[ext_resource type="PackedScene" uid="uid://pbosu7nrffl6" path="res://prefabs/water/water_pit.tscn" id="7_e0k26"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_r3prr"]
 sky_top_color = Color(0.807843, 0.968627, 1, 1)
@@ -48,6 +50,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 1.10152, 8.7)
 
 [node name="Camera3D" parent="." node_paths=PackedStringArray("player") instance=ExtResource("2_nrq8e")]
 transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.5, -0.707107, -0.353553, 0.612373, 9.39133, 7.48236, 17.9477)
+size = 6.0
 player = NodePath("../Player")
 
 [node name="Ground" type="CSGBox3D" parent="."]
@@ -57,10 +60,16 @@ use_collision = true
 size = Vector3(6, 1, 11)
 
 [node name="Ground2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -5.5)
 material_override = SubResource("StandardMaterial3D_aljyu")
 use_collision = true
-size = Vector3(8, 1, 11)
+size = Vector3(12, 1, 4)
+
+[node name="Ground5" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, -5.5)
+material_override = SubResource("StandardMaterial3D_aljyu")
+use_collision = true
+size = Vector3(7, 1, 4)
 
 [node name="Ground3" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.4, 1.5)
@@ -69,13 +78,13 @@ use_collision = true
 size = Vector3(4, 3.8, 4)
 
 [node name="Ground4" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1.4, -8.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 1.4, -11.5)
 material_override = SubResource("StandardMaterial3D_aljyu")
 use_collision = true
-size = Vector3(3, 1.8, 3)
+size = Vector3(3, 1.8, 5)
 
 [node name="Tower" type="CSGCombiner3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -17.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7, 0, -22.5)
 material_override = SubResource("StandardMaterial3D_s3hxg")
 use_collision = true
 
@@ -97,3 +106,12 @@ sides = 64
 
 [node name="MovingBlock" parent="." instance=ExtResource("5_um12q")]
 transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -4.5, 2, -2)
+
+[node name="MovingBlock2" parent="." instance=ExtResource("5_um12q")]
+transform = Transform3D(1.31135e-07, 0, -1, 0, 1, 0, 1, 0, 1.31135e-07, 5.5, 2, -9)
+
+[node name="WaterBouncePad" parent="." instance=ExtResource("6_gpocu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 2.4, -12.4)
+
+[node name="WaterPit" parent="." instance=ExtResource("7_e0k26")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0.7, -6)

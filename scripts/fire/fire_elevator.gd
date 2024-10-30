@@ -6,10 +6,7 @@ extends Node3D
 @export var curve : Curve
 
 func _process(delta: float) -> void:
-	var distance_a = point_a.global_position.y - global_position.y
-	var distance_b = point_b.global_position.y - global_position.y
 	var distance_between = point_b.global_position.y - point_a.global_position.y
-	
 	var t = 100.0 * (distance_between - global_position.y) / distance_between
 	var weight = curve.sample(t)
 
