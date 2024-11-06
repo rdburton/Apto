@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3 uid="uid://dsm0hk4a5i0qg"]
+
+[ext_resource type="Shader" path="res://shaders/wind_wisps.gdshader" id="1_8exoj"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hbgvp"]
+render_priority = 2
+shader = ExtResource("1_8exoj")
+shader_parameter/color1 = Color(0, 0, 0, 0)
+shader_parameter/color2 = Color(1, 1, 1, 0.588235)
+shader_parameter/color3 = Color(0, 0, 0, 0)
+shader_parameter/gradient_height = 0.91
+shader_parameter/pinch_strength = 0.8
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ffdnp"]
+emission_shape = 3
+emission_box_extents = Vector3(1, 1, 1)
+direction = Vector3(0, 0, -1)
+spread = 0.0
+initial_velocity_min = 1.0
+initial_velocity_max = 1.0
+gravity = Vector3(0, 0, -0.1)
+linear_accel_min = -2.23517e-06
+linear_accel_max = -2.23517e-06
+turbulence_noise_strength = 0.2
+turbulence_noise_scale = 0.5
+turbulence_noise_speed = Vector3(0, 0.2, 0)
+turbulence_influence_min = 0.05
+turbulence_influence_max = 0.05
+turbulence_initial_displacement_min = 1.49012e-06
+turbulence_initial_displacement_max = 1.49012e-06
+
+[sub_resource type="QuadMesh" id="QuadMesh_j37kn"]
+size = Vector2(2, 0.15)
+subdivide_width = 20
+subdivide_depth = 20
+orientation = 0
+
+[node name="WindWisps" type="Node3D"]
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+material_override = SubResource("ShaderMaterial_hbgvp")
+amount = 3
+lifetime = 30.0
+preprocess = 1.0
+explosiveness = 1.0
+randomness = 0.7
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_ffdnp")
+draw_pass_1 = SubResource("QuadMesh_j37kn")

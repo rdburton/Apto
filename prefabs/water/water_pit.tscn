@@ -3,17 +3,10 @@
 [ext_resource type="Script" path="res://scripts/water/water_pit.gd" id="1_0ay1e"]
 [ext_resource type="Texture2D" uid="uid://bbewndpas8t7b" path="res://alphas/RainSplash.png" id="1_c12pv"]
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_c06an"]
-size = Vector2(1.6, 1.6)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_142sx"]
-transparency = 1
-vertex_color_use_as_albedo = true
-albedo_color = Color(0, 0.945098, 0.941176, 0.768627)
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ebui4"]
-transparency = 1
+render_priority = 1
 blend_mode = 1
+depth_draw_mode = 2
 shading_mode = 0
 vertex_color_use_as_albedo = true
 albedo_color = Color(0.572549, 1, 1, 0.364706)
@@ -42,6 +35,14 @@ alpha_curve = SubResource("CurveTexture_q221o")
 
 [sub_resource type="QuadMesh" id="QuadMesh_gqvx4"]
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_c06an"]
+size = Vector2(1.6, 1.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_142sx"]
+transparency = 1
+vertex_color_use_as_albedo = true
+albedo_color = Color(0, 0.945098, 0.941176, 0.768627)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_1k7x0"]
 size = Vector3(1.6, 0.7, 1.6)
 
@@ -51,25 +52,24 @@ script = ExtResource("1_0ay1e")
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
-size = Vector3(2, 0.4, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+size = Vector3(2, 0.3, 2)
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 operation = 2
-size = Vector3(1.6, 0.2, 1.6)
-
-[node name="Water" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
-mesh = SubResource("PlaneMesh_c06an")
-surface_material_override/0 = SubResource("StandardMaterial3D_142sx")
+size = Vector3(1.6, 0.3, 1.6)
 
 [node name="WaterParticles" type="GPUParticles3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 material_override = SubResource("StandardMaterial3D_ebui4")
 amount = 60
 lifetime = 2.0
 process_material = SubResource("ParticleProcessMaterial_k5r4t")
 draw_pass_1 = SubResource("QuadMesh_gqvx4")
+
+[node name="Water" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_c06an")
+surface_material_override/0 = SubResource("StandardMaterial3D_142sx")
 
 [node name="Area3D" type="Area3D" parent="."]
 

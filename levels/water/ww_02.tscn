@@ -1,69 +1,111 @@
-[gd_scene load_steps=10 format=3 uid="uid://1ma5hfu7x1f6"]
+[gd_scene load_steps=13 format=3 uid="uid://1ma5hfu7x1f6"]
 
 [ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="1_28fcj"]
-[ext_resource type="PackedScene" uid="uid://w18n21kwqn3o" path="res://prefabs/camera_3d.tscn" id="2_r2m2e"]
+[ext_resource type="Shader" path="res://shaders/water_main_shader.gdshader" id="3_3hcro"]
 [ext_resource type="Texture2D" uid="uid://dnjx4hlgcmtsq" path="res://materials/prototype-texture-with-size.png" id="3_trjr2"]
 [ext_resource type="PackedScene" uid="uid://c0ffp18hq14mj" path="res://prefabs/goal.tscn" id="4_w4qeg"]
+[ext_resource type="PackedScene" uid="uid://5fiffs5ee8yn" path="res://prefabs/water/water_base.tscn" id="5_37gmy"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_pnnhr"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bnrt3"]
 sky_top_color = Color(0.807843, 0.968627, 1, 1)
 sky_horizon_color = Color(0.984314, 0.870588, 0.760784, 1)
 sky_curve = 0.0891906
-ground_bottom_color = Color(0.410488, 0.912133, 1, 1)
+ground_bottom_color = Color(0.974168, 0.79862, 0.625379, 1)
 ground_horizon_color = Color(0.982396, 0.869169, 0.758878, 1)
 ground_curve = 0.077275
 
-[sub_resource type="Sky" id="Sky_yfq5k"]
-sky_material = SubResource("ProceduralSkyMaterial_pnnhr")
+[sub_resource type="Sky" id="Sky_u70cs"]
+sky_material = SubResource("ProceduralSkyMaterial_bnrt3")
 
-[sub_resource type="Environment" id="Environment_857no"]
+[sub_resource type="Environment" id="Environment_s73te"]
 background_mode = 2
 background_color = Color(0.41858, 0.904372, 0.968227, 0.945098)
-sky = SubResource("Sky_yfq5k")
+sky = SubResource("Sky_u70cs")
+ambient_light_source = 2
+ambient_light_color = Color(0.621524, 0.621524, 0.621524, 1)
 reflected_light_source = 1
 tonemap_mode = 2
 glow_enabled = true
+glow_normalized = true
+glow_bloom = 0.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_54p4g"]
+render_priority = 0
+shader = ExtResource("3_3hcro")
+shader_parameter/roughness = null
+shader_parameter/metallic = null
+shader_parameter/color_start = Color(0.14, 0.63, 0.68, 1)
+shader_parameter/color_end = Color(0.16, 0.52, 0.87, 1)
+shader_parameter/gradient_dir = Vector3(0, 1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+shader_parameter/start_color = Color(1, 1, 1, 1)
+shader_parameter/end_color = Color(1, 1, 1, 1)
+shader_parameter/near_distance = 15.0
+shader_parameter/far_distance = 100.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yndyg"]
+render_priority = 0
+shader = ExtResource("3_3hcro")
+shader_parameter/roughness = null
+shader_parameter/metallic = null
+shader_parameter/color_start = Color(0.14, 0.63, 0.68, 1)
+shader_parameter/color_end = Color(0.16, 0.52, 0.87, 1)
+shader_parameter/gradient_dir = Vector3(0, 1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+shader_parameter/start_color = Color(1, 1, 1, 1)
+shader_parameter/end_color = Color(1, 1, 1, 1)
+shader_parameter/near_distance = 15.0
+shader_parameter/far_distance = 100.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2ymkx"]
+render_priority = 0
+shader = ExtResource("3_3hcro")
+shader_parameter/roughness = null
+shader_parameter/metallic = null
+shader_parameter/color_start = Color(0.14, 0.63, 0.68, 1)
+shader_parameter/color_end = Color(0.16, 0.52, 0.87, 1)
+shader_parameter/gradient_dir = Vector3(0, 1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+shader_parameter/start_color = Color(1, 1, 1, 1)
+shader_parameter/end_color = Color(1, 1, 1, 1)
+shader_parameter/near_distance = 15.0
+shader_parameter/far_distance = 100.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aljyu"]
-albedo_texture = ExtResource("3_trjr2")
-uv1_triplanar = true
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s3hxg"]
 albedo_texture = ExtResource("3_trjr2")
 uv1_triplanar = true
 
 [node name="WW02" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_857no")
+environment = SubResource("Environment_s73te")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 light_energy = 0.8
 shadow_enabled = true
 
 [node name="Player" parent="." groups=["Player"] instance=ExtResource("1_28fcj")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.10152, 8.7)
-
-[node name="Camera3D" parent="." node_paths=PackedStringArray("player") instance=ExtResource("2_r2m2e")]
-transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.5, -0.707107, -0.353553, 0.612373, 9.39133, 7.48236, 17.9477)
-player = NodePath("../Player")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.10152, 8.7)
 
 [node name="Ground" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.5)
-material_override = SubResource("StandardMaterial3D_aljyu")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 5)
+material_override = SubResource("ShaderMaterial_54p4g")
 use_collision = true
-size = Vector3(10, 1, 26)
+size = Vector3(10, 3, 11)
 
 [node name="Ground3" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -1.5)
-material_override = SubResource("StandardMaterial3D_aljyu")
+material_override = SubResource("ShaderMaterial_yndyg")
 use_collision = true
 size = Vector3(2, 2, 2)
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -12.5)
-material_override = SubResource("StandardMaterial3D_s3hxg")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -12.5)
+material_override = SubResource("ShaderMaterial_2ymkx")
 use_collision = true
 
 [node name="Ground4" type="CSGBox3D" parent="CSGCombiner3D"]
@@ -78,5 +120,8 @@ radius = 1.5
 sides = 64
 
 [node name="Goal" parent="." instance=ExtResource("4_w4qeg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, -13.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, -13.6)
 next_level = "res://levels/water/ww_03.tscn"
+
+[node name="WaterBase" parent="." instance=ExtResource("5_37gmy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)

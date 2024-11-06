@@ -1,36 +1,19 @@
-[gd_scene load_steps=19 format=3 uid="uid://ngv2tutvwhpu"]
+[gd_scene load_steps=18 format=3 uid="uid://ngv2tutvwhpu"]
 
 [ext_resource type="Script" path="res://scripts/water/bounce_pad.gd" id="1_t4gsp"]
-[ext_resource type="Shader" path="res://shaders/main_shader.gdshader" id="2_du7i2"]
 [ext_resource type="Texture2D" uid="uid://bbewndpas8t7b" path="res://alphas/RainSplash.png" id="3_52jd2"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_7vudc"]
 size = Vector3(2, 0.2, 2)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_8qc2q"]
-render_priority = 0
-shader = ExtResource("2_du7i2")
-shader_parameter/roughness = null
-shader_parameter/metallic = null
-shader_parameter/color_start = Color(0.427451, 0.894118, 0.858824, 1)
-shader_parameter/color_end = Color(0.72549, 0.894118, 0.858824, 1)
-shader_parameter/gradient_dir = Vector3(0, 1, 0)
-shader_parameter/min_value = -1.0
-shader_parameter/max_value = 1.0
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_24pnv"]
+albedo_color = Color(0.972549, 0.8, 0.623529, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_btbwr"]
 size = Vector3(1.4, 0.2, 1.4)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_6eevx"]
-render_priority = 0
-shader = ExtResource("2_du7i2")
-shader_parameter/roughness = null
-shader_parameter/metallic = null
-shader_parameter/color_start = Color(0.427451, 0.894118, 0.858824, 1)
-shader_parameter/color_end = Color(0.72549, 0.894118, 0.858824, 1)
-shader_parameter/gradient_dir = Vector3(0, -1, 0)
-shader_parameter/min_value = -1.0
-shader_parameter/max_value = 1.0
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n0syx"]
+albedo_color = Color(0.164706, 0.843137, 0.870588, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5ji8p"]
 size = Vector3(1.8, 0.9, 1.8)
@@ -106,12 +89,12 @@ bounce_power = 12.0
 
 [node name="Base" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_7vudc")
-surface_material_override/0 = SubResource("ShaderMaterial_8qc2q")
+surface_material_override/0 = SubResource("StandardMaterial3D_24pnv")
 
 [node name="Bouncer" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0.1, 0)
 mesh = SubResource("BoxMesh_btbwr")
-surface_material_override/0 = SubResource("ShaderMaterial_6eevx")
+surface_material_override/0 = SubResource("StandardMaterial3D_n0syx")
 
 [node name="Area3D" type="Area3D" parent="."]
 

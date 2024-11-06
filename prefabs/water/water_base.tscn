@@ -1,0 +1,54 @@
+[gd_scene load_steps=7 format=3 uid="uid://5fiffs5ee8yn"]
+
+[ext_resource type="Shader" path="res://shaders/water.gdshader" id="1_8fey4"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_tkc8m"]
+size = Vector2(100, 100)
+subdivide_width = 300
+subdivide_depth = 300
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ewoyp"]
+noise_type = 3
+frequency = 0.0032
+fractal_type = 3
+fractal_gain = 0.0
+fractal_ping_pong_strength = 0.94
+domain_warp_type = 1
+domain_warp_fractal_gain = 0.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_g77bj"]
+width = 1024
+height = 1024
+invert = true
+in_3d_space = true
+seamless = true
+as_normal_map = true
+noise = SubResource("FastNoiseLite_ewoyp")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_cvgn1"]
+in_3d_space = true
+seamless = true
+noise = SubResource("FastNoiseLite_ewoyp")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lrr7f"]
+render_priority = -99
+shader = ExtResource("1_8fey4")
+shader_parameter/color = Color(0, 0.870588, 0.870588, 0.996078)
+shader_parameter/peak_color = Color(0.818521, 0.99078, 1, 1)
+shader_parameter/mid_peak_color = Color(0.407843, 1, 1, 1)
+shader_parameter/brightness_threshold = 0.7
+shader_parameter/blend_strength = 0.05
+shader_parameter/noise_scale = 0.2
+shader_parameter/wave_amp = 0.8
+shader_parameter/wave_speed = 0.2
+shader_parameter/direction = Vector2(0, 1)
+shader_parameter/direction_speed = 0.01
+shader_parameter/mid_peak_min = -0.05
+shader_parameter/mid_peak_max = -0.01
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_cvgn1")
+shader_parameter/noise_normal = SubResource("NoiseTexture2D_g77bj")
+
+[node name="WaterBase" type="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, -4)
+mesh = SubResource("PlaneMesh_tkc8m")
+surface_material_override/0 = SubResource("ShaderMaterial_lrr7f")

@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://v0gna4xi7mil"]
+
+[ext_resource type="Script" path="res://scripts/camera_area.gd" id="1_7c4c8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_j43r3"]
+size = Vector3(4, 3, 2)
+
+[node name="CameraZoom" type="Area3D"]
+script = ExtResource("1_7c4c8")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -2.23517e-08)
+shape = SubResource("BoxShape3D_j43r3")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

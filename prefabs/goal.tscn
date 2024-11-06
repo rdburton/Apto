@@ -1,11 +1,11 @@
 [gd_scene load_steps=5 format=3 uid="uid://c0ffp18hq14mj"]
 
 [ext_resource type="Script" path="res://scripts/goal.gd" id="1_qwd2v"]
-[ext_resource type="Shader" path="res://shaders/main_shader.gdshader" id="2_pck7l"]
+[ext_resource type="Shader" path="res://shaders/goal_shader.gdshader" id="2_cua16"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_insp7"]
 render_priority = 0
-shader = ExtResource("2_pck7l")
+shader = ExtResource("2_cua16")
 shader_parameter/roughness = 0.1
 shader_parameter/metallic = 0.0
 shader_parameter/color_start = Color(0.859228, 0.654942, 1.00112e-05, 1)

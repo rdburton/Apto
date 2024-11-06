@@ -1,8 +1,7 @@
-[gd_scene load_steps=20 format=3 uid="uid://5vcqe2r5f4yo"]
+[gd_scene load_steps=19 format=3 uid="uid://5vcqe2r5f4yo"]
 
 [ext_resource type="Texture2D" uid="uid://dnjx4hlgcmtsq" path="res://materials/prototype-texture-with-size.png" id="1_5102i"]
 [ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="2_helmv"]
-[ext_resource type="PackedScene" uid="uid://w18n21kwqn3o" path="res://prefabs/camera_3d.tscn" id="3_yai10"]
 [ext_resource type="Script" path="res://scripts/water/water_world_door.gd" id="4_c2wsf"]
 [ext_resource type="Shader" path="res://shaders/water_stream.gdshader" id="5_xnadb"]
 
@@ -75,10 +74,6 @@ shadow_enabled = true
 
 [node name="Player" parent="." groups=["Player"] instance=ExtResource("2_helmv")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.301515, 0)
-
-[node name="Camera3D" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_yai10")]
-transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.5, -0.707107, -0.353553, 0.612373, 9.39133, 7.48236, 17.9477)
-player = NodePath("../Player")
 
 [node name="Hub" type="CSGCombiner3D" parent="."]
 material_override = SubResource("StandardMaterial3D_fhxoc")

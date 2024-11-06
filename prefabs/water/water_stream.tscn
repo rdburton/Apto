@@ -1,8 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://dtuhnroda8knw"]
+[gd_scene load_steps=17 format=3 uid="uid://dtuhnroda8knw"]
 
 [ext_resource type="Script" path="res://scripts/water/water_stream.gd" id="1_aewci"]
 [ext_resource type="Shader" path="res://shaders/water_stream.gdshader" id="2_31aio"]
 [ext_resource type="Texture2D" uid="uid://bbewndpas8t7b" path="res://alphas/RainSplash.png" id="3_3rfui"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lh38f"]
+albedo_color = Color(0.164706, 0.843137, 0.870588, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ubmcu"]
 size = Vector2(10, 2.8)
@@ -79,14 +82,22 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 operation = 2
 size = Vector3(10, 1, 2.6)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
+[node name="CSGCombiner3D2" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.25, 0)
 size = Vector3(2, 1.5, 3)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.65, 0)
+[node name="CSGBox3D5" type="CSGBox3D" parent="CSGCombiner3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 1, 5.96046e-08)
+size = Vector3(1.4, 0.2, 1.4)
+material = SubResource("StandardMaterial3D_lh38f")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.7, 0)
 operation = 2
-size = Vector3(1.2, 0.8, 1.2)
+size = Vector3(1.2, 0.9, 1.2)
 
 [node name="Water" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)

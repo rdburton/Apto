@@ -18,13 +18,13 @@ void fragment()
 	t = (t - min_value) / (max_value - min_value);
 	t = clamp(t, 0.0, 1.0);
 	vec4 color = mix(color_start, color_end, t);
-	
+
 	vec4 noise = texture(noise_texture, UV);
 	if (dissolve_pct >= noise.r)
 	{
 		ALPHA = 0.0;
 	}
-	
+
 	ALBEDO = color.rgb;
 	ROUGHNESS = roughness;
 	METALLIC = metallic;

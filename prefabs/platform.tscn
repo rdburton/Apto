@@ -1,19 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://cdsi4krmf73ki"]
+[gd_scene load_steps=4 format=3 uid="uid://cdsi4krmf73ki"]
 
 [ext_resource type="Script" path="res://scripts/platform.gd" id="1_6cftd"]
 
-[sub_resource type="VisualShader" id="VisualShader_7issq"]
-code = "shader_type spatial;
-render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
-
-
-
-"
-graph_offset = Vector2(-270.189, -12.3589)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5iarn"]
-render_priority = 0
-shader = SubResource("VisualShader_7issq")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_olsft"]
+albedo_color = Color(0.407843, 0.494118, 0.572549, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_k17ak"]
 size = Vector3(2, 2, 2)
@@ -23,7 +13,7 @@ script = ExtResource("1_6cftd")
 
 [node name="Block" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-material_override = SubResource("ShaderMaterial_5iarn")
+material_override = SubResource("StandardMaterial3D_olsft")
 use_collision = true
 size = Vector3(2, 2, 2)
 

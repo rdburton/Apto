@@ -13,7 +13,7 @@ uniform float noise_scale : hint_range(0.0, 1.0) = 0.2;
 uniform float wave_amp : hint_range(0.0, 1.0) = 0.2;
 uniform float wave_speed : hint_range(0.0, 1.0) = 0.2;
 
-void vertex() 
+void vertex()
 {
 	vec2 uv = UV * noise_scale;
 	float noise_value = texture(noise_texture, UV).r;
@@ -21,12 +21,12 @@ void vertex()
 	VERTEX.y += wave;
 }
 
-void fragment() 
+void fragment()
 {
 	vec2 uv = UV;
-	
+
 	float dissolve_value = texture(dissolve_texture, uv).r;
-	
+
 	if (dissolve_value < dissolve_threshold)
 	{
 		ALPHA = 0.0;
@@ -35,8 +35,7 @@ void fragment()
 		{
 			ALPHA = color.a;
 		}
-	
-	ALBEDO = color.rgb;
-	
-}
 
+	ALBEDO = color.rgb;
+
+}

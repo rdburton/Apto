@@ -11,6 +11,7 @@ var activated = false
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Player") and has_reset:
+		body.dash_counter = 0
 		if body.is_water:
 			activated = true
 			water_particles_activated.emitting = true

@@ -1,6 +1,5 @@
 extends Node3D
 
-
 @export var wait_time := 2.0
 
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
@@ -19,8 +18,3 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 		anim_playing = false
 		await get_tree().create_timer(wait_time).timeout
 		anim_completed = true
-
-#func _on_area_3d_body_entered(body: Node3D) -> void:
-	#if body.is_in_group("Player") and anim_playing:
-		#body.velocity.x += 50.0
-		
