@@ -11,7 +11,7 @@ void vertex()
 {
 	VERTEX.y += sin(TIME * -0.5 + VERTEX.x * 0.7) * 0.2;
 	VERTEX.y += sin(TIME * -0.5 + VERTEX.z * 0.7) * 0.2;
-	
+
 	float pinch_factor = 1.0 - (abs(VERTEX.y) / gradient_height) * pinch_strength;
 	VERTEX.y *= pinch_factor;
 }
@@ -19,7 +19,7 @@ void vertex()
 void fragment()
 {
 	float uv_factor = clamp(UV.x / gradient_height, 0.0, 1.0);
-	
+
 	vec4 color;
 	if (uv_factor < 0.5)
 	{
@@ -32,4 +32,3 @@ void fragment()
 	ALBEDO = color.rgb;
 	ALPHA = color.a;
 }
-

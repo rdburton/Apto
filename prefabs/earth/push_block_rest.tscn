@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://dj5v04e7lb370"]
+
+[ext_resource type="Script" path="res://scripts/earth/pushblock_rest.gd" id="1_pg141"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_o4mqr"]
+size = Vector3(2, 0.5, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1vqu5"]
+size = Vector3(2, 0.1, 2)
+
+[node name="PushBlockRest" type="Area3D"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+collision_layer = 5
+collision_mask = 4
+script = ExtResource("1_pg141")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+shape = SubResource("BoxShape3D_o4mqr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_1vqu5")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

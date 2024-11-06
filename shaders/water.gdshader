@@ -22,12 +22,12 @@ varying float wave_height;
 void vertex()
 {
 	vec2 offset = direction_speed * direction * TIME;
-	
+
 	vec2 uv = UV * noise_scale;
 	float noise_value = texture(noise_texture, UV + offset).r;
 	wave_height = sin(TIME * wave_speed + noise_value * 10.0) * wave_amp;
 	VERTEX.y += wave_height;
-	
+
 	VERTEX.x += cos(TIME * 1.5 + VERTEX.z * 0.7) * 0.4;
 }
 

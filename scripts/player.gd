@@ -24,6 +24,7 @@ var is_completed := false
 var current_speed : float
 var platform_velocity: Vector3 = Vector3.ZERO
 var rotate_camera := false
+var pushing_block : RigidBody3D = null
 
 func _process(delta: float) -> void:
 	emit_particles()
@@ -73,6 +74,13 @@ func _physics_process(delta: float) -> void:
 					dash_counter += 1
 
 	move_and_slide()
+	
+	for i in range(get_slide_collision_count()):
+		var collision = get_slide_collision(i)
+		var collider = collision.get_collider()
+		if collider is RigidBody3D and "PushBlock" in collider.get_groups():
+			pushing_block = collider as RigidBody3D
+			pushing_block.apply_central_impulse(-collision.get_normal() * 5.0)
 
 const FORWARD_ANGLE = 0.0
 const LEFT_ANGLE = PI / 2
@@ -86,8 +94,6 @@ func wrap_angle(angle: float) -> float:
 
 func get_directional_animation(camera_rotation_y: float) -> String:
 	camera_rotation_y = wrap_angle(camera_rotation_y)
-
-	print("Camera Rotation Y (Wrapped): ", camera_rotation_y)
 
 	if abs(camera_rotation_y - FORWARD_ANGLE) < ANGLE_TOLERANCE:
 		return "Forward"
@@ -103,31 +109,23 @@ func handle_animations() -> void:
 	var camera_rotation_y = camera_pivot.rotation.y
 	var animation = get_directional_animation(camera_rotation_y)
 
-	# Debugging: Print the current camera rotation and animation
-	print("Camera Rotation Y: ", camera_rotation_y, " | Current Animation: ", animation_player.current_animation)
-
 	if Input.is_action_pressed("move_forward"):
 		if animation_player.current_animation != animation:
-			print("Playing Forward Animation")
 			animation_player.play(animation)
 
 	elif Input.is_action_pressed("move_back"):
 		var back_animation = get_directional_animation(camera_rotation_y + BACK_ANGLE)
-		print("Attempting to Play Back Animation: ", back_animation)
 		if animation_player.current_animation != back_animation:
-			print("Playing Backward Animation")
 			animation_player.play(back_animation)
 
 	elif Input.is_action_pressed("move_left"):
 		var left_animation = get_directional_animation(camera_rotation_y + LEFT_ANGLE)
 		if animation_player.current_animation != left_animation:
-			print("Playing Left Animation")
 			animation_player.play(left_animation)
 
 	elif Input.is_action_pressed("move_right"):
 		var right_animation = get_directional_animation(camera_rotation_y + RIGHT_ANGLE)
 		if animation_player.current_animation != right_animation:
-			print("Playing Right Animation")
 			animation_player.play(right_animation)
 
 	else:
@@ -139,52 +137,9 @@ func handle_animations() -> void:
 			# Only switch to Idle if the current animation is nearly finished
 			if current_animation_pos >= (animation_length - anim_near_end):
 				if animation_player.current_animation != "Idle":
-					print("Transitioning to Idle Animation")
 					animation_player.play("Idle")
 		else:
-			print("Resetting to Idle Animation")
 			animation_player.play("Idle")
-
-	
-	#else:
-		#if not is_playing_loop:
-			#is_playing_loop = true
-		#elif is_playing_loop and current_animation_pos >= (animation_length - anim_near_end):
-			#animation_player.stop()
-			#is_playing_loop = false
-
-		
-	#if Input.is_action_pressed("move_forward"):
-		#if !rotate_camera:
-			#animation_player.play("Forward")
-			#is_playing_loop = false
-		#if rotate_camera:
-			#animation_player.play("Left")
-			#is_playing_loop = false
-			#
-	#elif Input.is_action_pressed("move_back"):
-		#if !rotate_camera:
-			#animation_player.play("Back")
-			#is_playing_loop = false
-		#if rotate_camera:
-			#animation_player.play("Right")
-			#is_playing_loop = false	
-				#
-	#elif Input.is_action_pressed("move_left"):
-		#if !rotate_camera:
-			#animation_player.play("Left")
-			#is_playing_loop = false
-		#if rotate_camera:
-			#animation_player.play("Back")
-			#is_playing_loop = false
-			#
-	#elif Input.is_action_pressed("move_right"):
-		#if !rotate_camera:
-			#animation_player.play("Right")
-			#is_playing_loop = false
-		#if rotate_camera:
-			#animation_player.play("Forward")
-			#is_playing_loop = false
 
 func emit_particles() -> void:
 	if is_ablaze:

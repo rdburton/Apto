@@ -1,19 +1,18 @@
-[gd_scene load_steps=25 format=3 uid="uid://c4ijcrg56oes"]
+[gd_scene load_steps=21 format=3 uid="uid://c4ijcrg56oes"]
 
 [ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="1_wxgb5"]
 [ext_resource type="Shader" path="res://shaders/water_main_shader.gdshader" id="3_wbg1d"]
 [ext_resource type="PackedScene" uid="uid://v0gna4xi7mil" path="res://prefabs/camera/camera_zoom.tscn" id="4_7iq21"]
 [ext_resource type="PackedScene" uid="uid://ngv2tutvwhpu" path="res://prefabs/water/bounce_pad.tscn" id="4_tu6tx"]
-[ext_resource type="PackedScene" uid="uid://c0ffp18hq14mj" path="res://prefabs/goal.tscn" id="6_kq6k1"]
 [ext_resource type="PackedScene" uid="uid://b24hiv1diqatt" path="res://prefabs/fire/fire_pit.tscn" id="7_tt1oa"]
 [ext_resource type="PackedScene" uid="uid://bhc8ej1tqup3b" path="res://prefabs/fire/fire_lever.tscn" id="8_y4fu4"]
 [ext_resource type="PackedScene" uid="uid://exighxogygqx" path="res://prefabs/fire/fire_elevator.tscn" id="9_esncs"]
 [ext_resource type="PackedScene" uid="uid://buwsntndf8lfq" path="res://prefabs/fire/fire_door.tscn" id="10_h5ta8"]
 [ext_resource type="PackedScene" uid="uid://pbosu7nrffl6" path="res://prefabs/water/water_pit.tscn" id="11_qw116"]
+[ext_resource type="PackedScene" uid="uid://bpnfbsquvy208" path="res://prefabs/earth/push_block.tscn" id="12_6hcw1"]
+[ext_resource type="PackedScene" uid="uid://dj5v04e7lb370" path="res://prefabs/earth/push_block_rest.tscn" id="12_c28an"]
 [ext_resource type="PackedScene" uid="uid://dtuhnroda8knw" path="res://prefabs/water/water_stream.tscn" id="12_ooi4x"]
 [ext_resource type="PackedScene" uid="uid://cdsi4krmf73ki" path="res://prefabs/platform.tscn" id="13_100v7"]
-[ext_resource type="PackedScene" uid="uid://dl3kebpuep0yu" path="res://prefabs/moving_block.tscn" id="14_lm5k3"]
-[ext_resource type="PackedScene" uid="uid://dgrjkolnhvaq8" path="res://prefabs/camera/camera_rotation_area.tscn" id="14_o3a68"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mct75"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -28,49 +27,64 @@ sky = SubResource("Sky_nlry7")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="Shader" id="Shader_360c6"]
+code = "shader_type spatial;
+render_mode blend_mix, depth_prepass_alpha;
+
+uniform float roughness : hint_range(0.0, 1.0, 0.1);
+uniform float metallic : hint_range(0.0, 1.0, 0.1);
+
+group_uniforms Gradient;
+uniform vec4 color_start : source_color = vec4(0.14, 0.63, 0.68, 1.0);
+uniform vec4 color_end : source_color = vec4(0.16, 0.52, 0.87, 1.0);
+uniform vec3 gradient_dir = vec3(0.0, 1.0, 0.0);
+uniform float min_value = -1.0;
+uniform float max_value = 1.0;
+
+group_uniforms Fade;
+uniform vec4 start_color : source_color = vec4(1.0);
+uniform vec4 end_color : source_color = vec4(1.0);
+uniform float near_distance : hint_range(0.0, 50.0, 0.1) = 15.0;
+uniform float far_distance : hint_range(0.0, 100.0, 0.1) = 100.0;
+
+
+void fragment()
+{
+	//Apply directional gradient to object surface
+	float gradient_factor = dot(VERTEX, gradient_dir);
+	gradient_factor = (gradient_factor - min_value) / (max_value - min_value);
+	gradient_factor = clamp(gradient_factor, 0.0, 1.0);
+	vec4 gradient_color = mix(color_start, color_end, gradient_factor);
+	
+	//Calculate distance from camera and apply a fade to the albedo
+	vec3 camera_pos = CAMERA_POSITION_WORLD;
+	float distance_to_camera = length(camera_pos - NODE_POSITION_WORLD);
+	float t = clamp((distance_to_camera - near_distance) / (far_distance - near_distance), 0.0, 1.0);
+	vec4 fade_color = mix(gradient_color, end_color, t); // Should start color be gradient_color??
+	
+	// Mix gradient color and fade color
+	vec4 final_color = mix(gradient_color,  fade_color, 0.5);
+
+	ALBEDO = final_color.rgb;
+	ALPHA = final_color.a;
+	ROUGHNESS = roughness;
+	METALLIC = metallic;
+}
+"
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1peak"]
 render_priority = 0
-shader = ExtResource("3_wbg1d")
+shader = SubResource("Shader_360c6")
 shader_parameter/roughness = null
 shader_parameter/metallic = null
-shader_parameter/color_start = Color(1, 0.6, 0.6, 1)
-shader_parameter/color_end = Color(1, 0.85, 0.65, 1)
-shader_parameter/gradient_dir = Vector3(0, -1, 0)
-shader_parameter/min_value = -1.0
-shader_parameter/max_value = 1.0
-shader_parameter/start_color = Color(0, 0, 0, 0)
-shader_parameter/end_color = Color(0, 0, 0, 0)
-shader_parameter/near_distance = 0.0
-shader_parameter/far_distance = 50.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_16xp1"]
-render_priority = 0
-shader = ExtResource("3_wbg1d")
-shader_parameter/roughness = null
-shader_parameter/metallic = null
-shader_parameter/color_start = Color(0.929412, 0.572549, 0.588235, 0.964706)
-shader_parameter/color_end = Color(0.941176, 0.854902, 0.666667, 1)
+shader_parameter/color_start = Color(0.921569, 0.380392, 0, 1)
+shader_parameter/color_end = Color(0.77, 0.320833, 0, 1)
 shader_parameter/gradient_dir = Vector3(0, 1, 0)
 shader_parameter/min_value = -1.0
 shader_parameter/max_value = 1.0
-shader_parameter/start_color = Color(0, 0, 0, 0)
-shader_parameter/end_color = Color(0, 0, 0, 0)
-shader_parameter/near_distance = 0.0
-shader_parameter/far_distance = 50.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_6fgy7"]
-render_priority = 0
-shader = ExtResource("3_wbg1d")
-shader_parameter/roughness = null
-shader_parameter/metallic = null
-shader_parameter/color_start = Color(0.929412, 0.572549, 0.588235, 1)
-shader_parameter/color_end = Color(0.941176, 0.854902, 0.666667, 1)
-shader_parameter/gradient_dir = Vector3(0, 1, 0)
-shader_parameter/min_value = -1.0
-shader_parameter/max_value = 1.0
-shader_parameter/start_color = Color(0, 0, 0, 0)
-shader_parameter/end_color = Color(0, 0, 0, 0)
-shader_parameter/near_distance = 0.0
+shader_parameter/start_color = Color(1, 1, 1, 1)
+shader_parameter/end_color = Color(1, 1, 1, 1)
+shader_parameter/near_distance = 10.0
 shader_parameter/far_distance = 50.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sc206"]
@@ -103,32 +117,6 @@ shader_parameter/end_color = Color(0, 0, 0, 0)
 shader_parameter/near_distance = 0.0
 shader_parameter/far_distance = 50.0
 
-[sub_resource type="GDScript" id="GDScript_ikppq"]
-script/source = "extends Node3D
-
-@export var rotation_angle : float = 90.0
-var camera_3d = Camera3D
-
-func _ready() -> void:
-	camera_3d = get_tree().get_first_node_in_group(\"Camera\")
-
-func _on_area_3d_body_entered(body: Node3D) -> void:
-	if body.is_in_group(\"Player\"):
-		var player = body
-		rotate_camera(player)
-		print(\"CAMERA ROTATE\")
-		
-		
-func rotate_camera(player) -> void:
-	var camera_pivot = player.get_node(\"CameraPivot\")
-	var rotate_radians = deg_to_rad(rotation_angle)
-	
-	camera_3d.rotate_y(rotate_radians)
-"
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_dw75a"]
-size = Vector3(3, 2, 2)
-
 [node name="TESTWORLD" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -139,52 +127,41 @@ transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75
 shadow_enabled = true
 
 [node name="Player" parent="." groups=["Player"] instance=ExtResource("1_wxgb5")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 21)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 1.6, 21)
 
 [node name="World" type="Node3D" parent="."]
 
 [node name="Space01" type="Node3D" parent="World"]
 
 [node name="Ground" type="CSGBox3D" parent="World/Space01"]
-transform = Transform3D(0.3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11)
+transform = Transform3D(0.3, 0, 0, 0, 1, 0, 0, 0, 1, -7.2, 0, 11)
 material_override = SubResource("ShaderMaterial_1peak")
 use_collision = true
-size = Vector3(50, 1, 28)
+size = Vector3(52, 1, 28)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="World/Space01"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, 7)
-material_override = SubResource("ShaderMaterial_16xp1")
+[node name="Ground2" type="CSGBox3D" parent="World/Space01"]
+transform = Transform3D(-1.31134e-08, 0, -1, 0, 1, 0, 0.3, 0, -4.37114e-08, 5.1, 0, 20.45)
+material_override = SubResource("ShaderMaterial_1peak")
 use_collision = true
-size = Vector3(2, 1, 2)
+size = Vector3(11, 1, 9)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="World/Space01"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, 7)
-material_override = SubResource("ShaderMaterial_6fgy7")
+[node name="Ground3" type="CSGBox3D" parent="World/Space01"]
+transform = Transform3D(-1.31134e-08, 0, -1, 0, 1, 0, 0.3, 0, -4.37114e-08, 24.1, 0, 10.4)
+material_override = SubResource("ShaderMaterial_1peak")
 use_collision = true
-size = Vector3(2, 1, 2)
-
-[node name="CSGBox3D4" type="CSGBox3D" parent="World/Space01"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 4)
-material_override = SubResource("ShaderMaterial_6fgy7")
-use_collision = true
-size = Vector3(2, 1, 2)
-
-[node name="CSGBox3D5" type="CSGBox3D" parent="World/Space01"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 10)
-material_override = SubResource("ShaderMaterial_6fgy7")
-use_collision = true
-size = Vector3(2, 1, 2)
+collision_layer = 33
+size = Vector3(78, 1, 29)
 
 [node name="Space02" type="Node3D" parent="World"]
 
 [node name="BouncePad" parent="World/Space02" instance=ExtResource("4_tu6tx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 14)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.5, -6)
 
 [node name="Ground2" type="CSGBox3D" parent="World/Space02"]
-transform = Transform3D(0.3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -17)
+transform = Transform3D(0.3, 0, 0, 0, 1, 0, 0, 0, 1, -4.05, 0, -17)
 material_override = SubResource("ShaderMaterial_sc206")
 use_collision = true
-size = Vector3(100, 1, 28)
+size = Vector3(73, 1, 28)
 
 [node name="Ground3" type="CSGBox3D" parent="World/Space02"]
 transform = Transform3D(0.3, 0, 0, 0, 1, 0, 0, 0, 1, 22.5, 0, -40)
@@ -224,10 +201,6 @@ size = Vector3(2, 8, 7)
 
 [node name="CameraZoom" parent="World/Space02" instance=ExtResource("4_7iq21")]
 
-[node name="Goal" parent="World/Space02" instance=ExtResource("6_kq6k1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 1, -5)
-next_level = "res://levels/testworld.tscn"
-
 [node name="FireElevator" type="Node3D" parent="World/Space02"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.7, -27)
 
@@ -265,23 +238,84 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, -0.3, -1.4)
 [node name="WaterBlockDes" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19, 0, -1.5)
 
-[node name="MovingBlock" parent="." instance=ExtResource("14_lm5k3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -7)
+[node name="CSGBox3D3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0.55, 13.5)
+use_collision = true
+collision_layer = 4
+collision_mask = 4
+size = Vector3(0.2, 0.2, 8)
 
-[node name="CameraShift" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 0)
-script = SubResource("GDScript_ikppq")
+[node name="CSGBox3D5" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5, 0.55, 13.5)
+use_collision = true
+collision_layer = 4
+collision_mask = 4
+size = Vector3(0.2, 0.2, 8)
 
-[node name="Area3D" type="Area3D" parent="CameraShift"]
+[node name="CSGBox3D6" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0.55, 13.35)
+use_collision = true
+collision_layer = 4
+collision_mask = 4
+size = Vector3(0.2, 0.2, 8.3)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CameraShift/Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 16.5)
-shape = SubResource("BoxShape3D_dw75a")
+[node name="CSGBox3D7" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.5, 0.55, 16)
+use_collision = true
+collision_layer = 4
+collision_mask = 4
+size = Vector3(0.2, 0.2, 3)
 
-[node name="CameraRotationArea" parent="." instance=ExtResource("14_o3a68")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 17)
-should_rotate = true
+[node name="CSGBox3D10" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.5, 0.55, 10.7)
+use_collision = true
+collision_layer = 4
+collision_mask = 4
+size = Vector3(0.2, 0.2, 3)
 
-[connection signal="body_entered" from="CameraShift/Area3D" to="CameraShift" method="_on_area_3d_body_entered"]
+[node name="CSGBox3D8" type="CSGBox3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 26.1, 0.55, 14.6)
+use_collision = true
+collision_layer = 4
+collision_mask = 4
+size = Vector3(0.2, 0.2, 3)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 26.1, 0.55, 12.1)
+use_collision = true
+collision_layer = 4
+collision_mask = 4
+size = Vector3(0.2, 0.2, 3)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 17.2, 2, 5.5)
+use_collision = true
+collision_layer = 4
+collision_mask = 4
+size = Vector3(0.5, 3, 3)
+
+[node name="PushBlockRest" parent="." instance=ExtResource("12_c28an")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 17.4, 0.55, 8)
+block_name = "One"
+
+[node name="PushBlock" parent="." instance=ExtResource("12_6hcw1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.25, 1.5, 17)
+block_name = "One"
+
+[node name="PushBlock2" parent="." instance=ExtResource("12_6hcw1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.4, 1.5, 13.3)
+block_name = "Two"
+
+[node name="PushBlock3" parent="." instance=ExtResource("12_6hcw1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.3, 1.5, 17)
+block_name = "One"
+
+[node name="PushBlockRest2" parent="." instance=ExtResource("12_c28an")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 28.6, 0.55, 13.3)
+block_name = "Two"
+
+[node name="PushBlockRest3" parent="." instance=ExtResource("12_c28an")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 23.2, 0.55, 8.1)
+block_name = "One"
 
 [editable path="Player"]

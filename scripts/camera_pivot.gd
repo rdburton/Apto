@@ -21,12 +21,3 @@ func rotate_camera(delta: float) -> void:
 
 	current_rotation = lerp_angle(current_rotation, target_rotation, rotation_speed * delta)
 	rotation.y = current_rotation
-	
-#func rotate_camera(delta : float) -> void:
-	#if player.rotate_camera == true:
-		#current_rotation = lerp_angle(current_rotation, target_rotation, rotation_speed * delta)
-		#rotation.y = current_rotation
-		#
-	#if player.rotate_camera == false:
-		#current_rotation = lerp_angle(current_rotation, original_rotation, rotation_speed * delta)
-		#rotation.y = current_rotation
