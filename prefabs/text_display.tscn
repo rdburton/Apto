@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://t4easv2g8c6k"]
+
+[ext_resource type="FontFile" uid="uid://dprkshbxp1v41" path="res://fonts/bergenSt/BNBergenSt-Light.otf" id="1_vmx5l"]
+
+[node name="TextDisplay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -398.5
+offset_top = -165.0
+offset_right = 401.5
+offset_bottom = -55.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/line_separation = 3
+theme_override_fonts/normal_font = ExtResource("1_vmx5l")
+theme_override_font_sizes/normal_font_size = 30
+bbcode_enabled = true
+text = "[center]
+That part of the world... which is the most solid support of nature, as bones are in a living creature, is called the earth.
+[/center]"

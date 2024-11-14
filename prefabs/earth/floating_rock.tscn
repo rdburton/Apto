@@ -1,0 +1,137 @@
+[gd_scene load_steps=7 format=3 uid="uid://wkvvaccnp76c"]
+
+[ext_resource type="Script" path="res://scripts/earth/floating_rock.gd" id="1_2jdtm"]
+
+[sub_resource type="Shader" id="Shader_ttr5w"]
+code = "shader_type spatial;
+render_mode blend_mix, depth_prepass_alpha;
+
+uniform float roughness : hint_range(0.0, 1.0, 0.1);
+uniform float metallic : hint_range(0.0, 1.0, 0.1);
+
+group_uniforms Gradient;
+uniform vec4 color_start : source_color = vec4(0.14, 0.63, 0.68, 1.0);
+uniform vec4 color_end : source_color = vec4(0.16, 0.52, 0.87, 1.0);
+uniform vec3 gradient_dir = vec3(0.0, 1.0, 0.0);
+uniform float min_value = -1.0;
+uniform float max_value = 1.0;
+
+group_uniforms Fade;
+uniform vec4 start_color : source_color = vec4(1.0);
+uniform vec4 end_color : source_color = vec4(1.0);
+uniform float near_distance : hint_range(0.0, 50.0, 0.1) = 15.0;
+uniform float far_distance : hint_range(0.0, 100.0, 0.1) = 100.0;
+
+
+void fragment()
+{
+	//Apply directional gradient to object surface
+	float gradient_factor = dot(VERTEX, gradient_dir);
+	gradient_factor = (gradient_factor - min_value) / (max_value - min_value);
+	gradient_factor = clamp(gradient_factor, 0.0, 1.0);
+	vec4 gradient_color = mix(color_start, color_end, gradient_factor);
+	
+	//Calculate distance from camera and apply a fade to the albedo
+	vec3 camera_pos = CAMERA_POSITION_WORLD;
+	float distance_to_camera = length(camera_pos - NODE_POSITION_WORLD);
+	float t = clamp((distance_to_camera - near_distance) / (far_distance - near_distance), 0.0, 1.0);
+	vec4 fade_color = mix(gradient_color, end_color, t); // Should start color be gradient_color??
+	
+	// Mix gradient color and fade color
+	vec4 final_color = mix(gradient_color,  fade_color, 0.5);
+
+	ALBEDO = final_color.rgb;
+	ALPHA = final_color.a;
+	ROUGHNESS = roughness;
+	METALLIC = metallic;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_np11t"]
+render_priority = 0
+shader = SubResource("Shader_ttr5w")
+shader_parameter/roughness = 1.0
+shader_parameter/metallic = 0.0
+shader_parameter/color_start = Color(0.506259, 0.543126, 0.487774, 1)
+shader_parameter/color_end = Color(0.584314, 0.619608, 0.564706, 1)
+shader_parameter/gradient_dir = Vector3(0, 1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+shader_parameter/start_color = Color(1, 1, 1, 1)
+shader_parameter/end_color = Color(1, 1, 1, 1)
+shader_parameter/near_distance = 50.0
+shader_parameter/far_distance = 100.0
+
+[sub_resource type="Animation" id="Animation_x2vt6"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 5.4, -2)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.610865, 0, 0.785398)]
+}
+
+[sub_resource type="Animation" id="Animation_nnxao"]
+resource_name = "main"
+length = 10.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2, 5, 7.53333, 10),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2),
+"update": 0,
+"values": [Vector3(0, 5.4, -2), Vector3(0, 5.8, -2), Vector3(0, 5, -2), Vector3(0, 5.8, -2), Vector3(0, 5.4, -2)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 10),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-0.610865, 0, 0.785398), Vector3(-0.610865, 6.28319, 0.785398)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ex2fx"]
+_data = {
+"RESET": SubResource("Animation_x2vt6"),
+"main": SubResource("Animation_nnxao")
+}
+
+[node name="Ground3" type="CSGBox3D"]
+transform = Transform3D(0.707107, -0.707107, 0, 0.579228, 0.579228, 0.573576, -0.405579, -0.40558, 0.819152, 0, 5.4, -2)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(1.5, 1.5, 1.5)
+script = ExtResource("1_2jdtm")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ex2fx")
+}

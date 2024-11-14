@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bpnfbsquvy208"]
+[gd_scene load_steps=12 format=3 uid="uid://bpnfbsquvy208"]
 
 [ext_resource type="Script" path="res://scripts/earth/push_block.gd" id="1_g73a1"]
 
@@ -9,16 +9,37 @@ absorbent = true
 [sub_resource type="BoxShape3D" id="BoxShape3D_7bsek"]
 size = Vector3(2, 2, 2)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j50xy"]
+albedo_color = Color(0.568627, 0.529412, 0.529412, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_j8835"]
 size = Vector3(2, 2, 2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_jti5n"]
-size = Vector3(2.2, 2.1, 2.2)
+size = Vector3(2.6, 2.1, 2.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_37xu8"]
+albedo_color = Color(0.309804, 0.243137, 0.243137, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6827c"]
+size = Vector3(1, 0.5, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_0jvbo"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_27sen"]
+top_radius = 0.0
+bottom_radius = 0.8
+height = 0.5
+radial_segments = 4
+rings = 0
+
+[sub_resource type="TorusMesh" id="TorusMesh_jce8m"]
+outer_radius = 0.75
 
 [node name="PushBlock" type="RigidBody3D" groups=["PushBlock"]]
 collision_layer = 4
 collision_mask = 5
-mass = 10.0
+mass = 100.0
 physics_material_override = SubResource("PhysicsMaterial_0plst")
 lock_rotation = true
 contact_monitor = true
@@ -30,6 +51,7 @@ script = ExtResource("1_g73a1")
 shape = SubResource("BoxShape3D_7bsek")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_j50xy")
 mesh = SubResource("BoxMesh_j8835")
 
 [node name="Area3D" type="Area3D" parent="."]
@@ -38,4 +60,29 @@ mesh = SubResource("BoxMesh_j8835")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.19209e-07, 0.0500001, 1.19209e-07)
 shape = SubResource("BoxShape3D_jti5n")
 
+[node name="IdentifierCube" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_37xu8")
+mesh = SubResource("BoxMesh_6827c")
+
+[node name="IdentifierSphere" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_37xu8")
+mesh = SubResource("SphereMesh_0jvbo")
+
+[node name="IdentifierPyramid" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 1.25, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_37xu8")
+mesh = SubResource("CylinderMesh_27sen")
+
+[node name="IdentifierTorus" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0.967415, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_37xu8")
+mesh = SubResource("TorusMesh_jce8m")
+
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

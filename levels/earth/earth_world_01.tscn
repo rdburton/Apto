@@ -1,0 +1,387 @@
+[gd_scene load_steps=11 format=3 uid="uid://b0qxxfs8rynvu"]
+
+[ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="1_0jh8n"]
+[ext_resource type="PackedScene" uid="uid://wkvvaccnp76c" path="res://prefabs/earth/floating_rock.tscn" id="2_iq2r8"]
+[ext_resource type="PackedScene" uid="uid://bcqugkompqm6t" path="res://prefabs/text_area.tscn" id="2_p8spm"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qml5k"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_thvrv"]
+sky_material = SubResource("ProceduralSkyMaterial_qml5k")
+
+[sub_resource type="Environment" id="Environment_j55t5"]
+background_mode = 2
+sky = SubResource("Sky_thvrv")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="Shader" id="Shader_360c6"]
+code = "shader_type spatial;
+render_mode blend_mix, depth_prepass_alpha;
+
+uniform float roughness : hint_range(0.0, 1.0, 0.1);
+uniform float metallic : hint_range(0.0, 1.0, 0.1);
+
+group_uniforms Gradient;
+uniform vec4 color_start : source_color = vec4(0.14, 0.63, 0.68, 1.0);
+uniform vec4 color_end : source_color = vec4(0.16, 0.52, 0.87, 1.0);
+uniform vec3 gradient_dir = vec3(0.0, 1.0, 0.0);
+uniform float min_value = -1.0;
+uniform float max_value = 1.0;
+
+group_uniforms Fade;
+uniform vec4 start_color : source_color = vec4(1.0);
+uniform vec4 end_color : source_color = vec4(1.0);
+uniform float near_distance : hint_range(0.0, 50.0, 0.1) = 15.0;
+uniform float far_distance : hint_range(0.0, 100.0, 0.1) = 100.0;
+
+
+void fragment()
+{
+	//Apply directional gradient to object surface
+	float gradient_factor = dot(VERTEX, gradient_dir);
+	gradient_factor = (gradient_factor - min_value) / (max_value - min_value);
+	gradient_factor = clamp(gradient_factor, 0.0, 1.0);
+	vec4 gradient_color = mix(color_start, color_end, gradient_factor);
+	
+	//Calculate distance from camera and apply a fade to the albedo
+	vec3 camera_pos = CAMERA_POSITION_WORLD;
+	float distance_to_camera = length(camera_pos - NODE_POSITION_WORLD);
+	float t = clamp((distance_to_camera - near_distance) / (far_distance - near_distance), 0.0, 1.0);
+	vec4 fade_color = mix(gradient_color, end_color, t); // Should start color be gradient_color??
+	
+	// Mix gradient color and fade color
+	vec4 final_color = mix(gradient_color,  fade_color, 0.5);
+
+	ALBEDO = final_color.rgb;
+	ALPHA = final_color.a;
+	ROUGHNESS = roughness;
+	METALLIC = metallic;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nwqt4"]
+render_priority = 0
+shader = SubResource("Shader_360c6")
+shader_parameter/roughness = 1.0
+shader_parameter/metallic = 0.0
+shader_parameter/color_start = Color(0.399612, 0.618535, 0.291209, 1)
+shader_parameter/color_end = Color(0.320399, 0.502172, 0.279605, 1)
+shader_parameter/gradient_dir = Vector3(0, 1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+shader_parameter/start_color = Color(1, 1, 1, 1)
+shader_parameter/end_color = Color(1, 1, 1, 1)
+shader_parameter/near_distance = 50.0
+shader_parameter/far_distance = 100.0
+
+[sub_resource type="Shader" id="Shader_ttr5w"]
+code = "shader_type spatial;
+render_mode blend_mix, depth_prepass_alpha;
+
+uniform float roughness : hint_range(0.0, 1.0, 0.1);
+uniform float metallic : hint_range(0.0, 1.0, 0.1);
+
+group_uniforms Gradient;
+uniform vec4 color_start : source_color = vec4(0.14, 0.63, 0.68, 1.0);
+uniform vec4 color_end : source_color = vec4(0.16, 0.52, 0.87, 1.0);
+uniform vec3 gradient_dir = vec3(0.0, 1.0, 0.0);
+uniform float min_value = -1.0;
+uniform float max_value = 1.0;
+
+group_uniforms Fade;
+uniform vec4 start_color : source_color = vec4(1.0);
+uniform vec4 end_color : source_color = vec4(1.0);
+uniform float near_distance : hint_range(0.0, 50.0, 0.1) = 15.0;
+uniform float far_distance : hint_range(0.0, 100.0, 0.1) = 100.0;
+
+
+void fragment()
+{
+	//Apply directional gradient to object surface
+	float gradient_factor = dot(VERTEX, gradient_dir);
+	gradient_factor = (gradient_factor - min_value) / (max_value - min_value);
+	gradient_factor = clamp(gradient_factor, 0.0, 1.0);
+	vec4 gradient_color = mix(color_start, color_end, gradient_factor);
+	
+	//Calculate distance from camera and apply a fade to the albedo
+	vec3 camera_pos = CAMERA_POSITION_WORLD;
+	float distance_to_camera = length(camera_pos - NODE_POSITION_WORLD);
+	float t = clamp((distance_to_camera - near_distance) / (far_distance - near_distance), 0.0, 1.0);
+	vec4 fade_color = mix(gradient_color, end_color, t); // Should start color be gradient_color??
+	
+	// Mix gradient color and fade color
+	vec4 final_color = mix(gradient_color,  fade_color, 0.5);
+
+	ALBEDO = final_color.rgb;
+	ALPHA = final_color.a;
+	ROUGHNESS = roughness;
+	METALLIC = metallic;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_np11t"]
+render_priority = 0
+shader = SubResource("Shader_ttr5w")
+shader_parameter/roughness = 1.0
+shader_parameter/metallic = 0.0
+shader_parameter/color_start = Color(0.506259, 0.543126, 0.487774, 1)
+shader_parameter/color_end = Color(0.584314, 0.619608, 0.564706, 1)
+shader_parameter/gradient_dir = Vector3(0, 1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+shader_parameter/start_color = Color(1, 1, 1, 1)
+shader_parameter/end_color = Color(1, 1, 1, 1)
+shader_parameter/near_distance = 50.0
+shader_parameter/far_distance = 100.0
+
+[node name="EarthWorld01" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_j55t5")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Player" parent="." instance=ExtResource("1_0jh8n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 17)
+
+[node name="Ground" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.5, 0)
+material_override = SubResource("ShaderMaterial_nwqt4")
+use_collision = true
+size = Vector3(20, 10, 30)
+
+[node name="Ground3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.5, 18)
+material_override = SubResource("ShaderMaterial_nwqt4")
+use_collision = true
+size = Vector3(6, 10, 6)
+
+[node name="Ground2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -2)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(2, 3, 2)
+
+[node name="FloatingRock" parent="." instance=ExtResource("2_iq2r8")]
+
+[node name="Wall" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 2.7, -1.5)
+
+[node name="Ground9" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+material_override = SubResource("ShaderMaterial_nwqt4")
+use_collision = true
+size = Vector3(5, 4.4, 3)
+
+[node name="Ground13" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 0, -0.85)
+material_override = SubResource("ShaderMaterial_nwqt4")
+use_collision = true
+size = Vector3(5.7, 4.4, 4.5)
+
+[node name="Ground3" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -0.7, 15.5)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(2, 3, 2)
+
+[node name="Ground4" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, -0.2, 13)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 4, 3)
+
+[node name="Ground5" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7, 0.3, 8)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 5, 3)
+
+[node name="Ground12" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(0.996195, 0.0871557, 0, -0.0871557, 0.996195, 0, 0, 0, 1, 2.7, 0.7, 2.45)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 5.8, 2.1)
+
+[node name="Ground6" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.3, 5)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 5, 3)
+
+[node name="Ground14" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.2, -4.35)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 4.8, 2.3)
+
+[node name="Ground15" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7, 0.3, -6.65)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 5, 2.3)
+
+[node name="Ground16" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0.0999997, -8.95)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 4.6, 2.3)
+
+[node name="Ground17" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 0.2, -10.85)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 4.8, 1.5)
+
+[node name="Ground18" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.9, 0.45, -13.05)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(4, 5.3, 2.9)
+
+[node name="Ground19" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.55, -0.7, -11.3)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(1.3, 3, 1.4)
+
+[node name="Ground7" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.35, -0.25, 4.85)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(1.5, 3.9, 0.9)
+
+[node name="Ground10" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, -1.2, 9.8)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(1, 2, 1)
+
+[node name="Ground11" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, -1.35, 10.95)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(1, 1.7, 1.3)
+
+[node name="Ground8" type="CSGBox3D" parent="Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.25, -1.4, 3.65)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(1.9, 3, 1.5)
+
+[node name="Wall2" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 12.5, 0.7, 1.5)
+
+[node name="Ground9" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+material_override = SubResource("ShaderMaterial_nwqt4")
+use_collision = true
+size = Vector3(5, 4.4, 3)
+
+[node name="Ground13" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 0, -0.85)
+material_override = SubResource("ShaderMaterial_nwqt4")
+use_collision = true
+size = Vector3(5.7, 4.4, 4.5)
+
+[node name="Ground3" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -0.7, 15.5)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(2, 3, 2)
+
+[node name="Ground4" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, -0.2, 13)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 4, 3)
+
+[node name="Ground5" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7, 0.3, 8)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 5, 3)
+
+[node name="Ground12" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(0.996195, 0.0871557, 0, -0.0871557, 0.996195, 0, 0, 0, 1, 2.7, 0.7, 2.45)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 5.8, 2.1)
+
+[node name="Ground6" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.3, 5)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 5, 3)
+
+[node name="Ground14" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.2, -4.35)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 4.8, 2.3)
+
+[node name="Ground15" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7, 0.3, -6.65)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 5, 2.3)
+
+[node name="Ground16" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0.0999997, -8.95)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 4.6, 2.3)
+
+[node name="Ground17" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 0.2, -10.85)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(3, 4.8, 1.5)
+
+[node name="Ground18" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.9, 0.45, -13.05)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(4, 5.3, 2.9)
+
+[node name="Ground19" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.55, -0.7, -11.3)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(1.3, 3, 1.4)
+
+[node name="Ground7" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.35, -0.25, 4.85)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(1.5, 3.9, 0.9)
+
+[node name="Ground10" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, -1.2, 9.8)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(1, 2, 1)
+
+[node name="Ground11" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, -1.35, 10.95)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(1, 1.7, 1.3)
+
+[node name="Ground8" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.25, -1.4, 3.65)
+material_override = SubResource("ShaderMaterial_np11t")
+use_collision = true
+size = Vector3(1.9, 3, 1.5)
+
+[node name="TextArea" parent="." instance=ExtResource("2_p8spm")]
+
+[node name="CollisionShape3D" parent="TextArea/Area3D" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 1.5, 1.1)
+
+[editable path="TextArea"]

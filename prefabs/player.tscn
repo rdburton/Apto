@@ -1,15 +1,19 @@
-[gd_scene load_steps=24 format=3 uid="uid://di37b3061x66q"]
+[gd_scene load_steps=31 format=3 uid="uid://di37b3061x66q"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_xj306"]
 [ext_resource type="Texture2D" uid="uid://bbewndpas8t7b" path="res://alphas/RainSplash.png" id="2_1vp5y"]
 [ext_resource type="Shader" path="res://shaders/highlight.gdshader" id="2_d55w5"]
 [ext_resource type="Script" path="res://scripts/camera_pivot.gd" id="2_dakht"]
 [ext_resource type="PackedScene" uid="uid://w18n21kwqn3o" path="res://prefabs/camera/camera_3d.tscn" id="4_um7aw"]
+[ext_resource type="FontFile" uid="uid://cccprt40b8klo" path="res://fonts/bergenSt/BNBergenSt-Bold.otf" id="5_88h5f"]
+[ext_resource type="FontFile" uid="uid://dprkshbxp1v41" path="res://fonts/bergenSt/BNBergenSt-Light.otf" id="6_tbj8r"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wsjbh"]
-height = 1.20303
+radius = 0.4
+height = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_7wepl"]
+size = Vector3(0.8, 0.8, 0.8)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hirbi"]
 render_priority = 0
@@ -248,7 +252,46 @@ alpha_curve = SubResource("CurveTexture_1ix1c")
 
 [sub_resource type="QuadMesh" id="QuadMesh_mu5w2"]
 
-[node name="Player" type="CharacterBody3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gl556"]
+diffuse_mode = 3
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.42, 0.36519, 0.2982, 1)
+billboard_keep_scale = true
+
+[sub_resource type="Curve" id="Curve_ii1ee"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -3.09419, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_mie2k"]
+curve = SubResource("Curve_ii1ee")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_b1437"]
+emission_shape_scale = Vector3(0.9, 0.1, 0.9)
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 1.0
+emission_ring_radius = 1.0
+emission_ring_inner_radius = 0.7
+angle_min = 1.07288e-05
+angle_max = 1.07288e-05
+velocity_pivot = Vector3(1, 0, 0)
+direction = Vector3(0, 1, 1)
+initial_velocity_min = 0.5
+initial_velocity_max = 1.5
+angular_velocity_min = -1.60933e-05
+angular_velocity_max = -1.60933e-05
+gravity = Vector3(0, -2, 0)
+damping_min = 1.0
+damping_max = 2.0
+scale_min = 0.1
+scale_max = 0.4
+scale_curve = SubResource("CurveTexture_mie2k")
+hue_variation_min = -0.05
+hue_variation_max = 0.1
+
+[sub_resource type="BoxMesh" id="BoxMesh_3wqeg"]
+
+[node name="Player" type="CharacterBody3D" groups=["Player"]]
 collision_layer = 7
 collision_mask = 7
 floor_constant_speed = true
@@ -262,8 +305,47 @@ unique_name_in_owner = true
 script = ExtResource("2_dakht")
 
 [node name="Camera3D" parent="CameraPivot" instance=ExtResource("4_um7aw")]
-transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.499999, -0.707107, -0.353553, 0.612373, 8, 7.5, 9)
+transform = Transform3D(0.707107, -0.298836, 0.640856, 0, 0.906308, 0.422618, -0.707107, -0.298836, 0.640856, 8, 7.5, 9)
+current = true
 size = 15.0
+camera_offset = Vector3(20, 16, 20)
+
+[node name="TextDisplay" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="TextDisplay"]
+modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -55.0
+offset_right = 400.0
+offset_bottom = 55.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TextDisplay/PanelContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/line_separation = 3
+theme_override_fonts/normal_font = ExtResource("6_tbj8r")
+theme_override_fonts/bold_font = ExtResource("5_88h5f")
+theme_override_font_sizes/normal_font_size = 30
+theme_override_font_sizes/bold_font_size = 30
+bbcode_enabled = true
+text = "[center]
+That part of the world... which is the most solid support of nature, as bones are in a living creature, is called the earth.
+[/center]"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -7.45058e-09, 0)
@@ -295,6 +377,13 @@ amount = 60
 lifetime = 2.0
 process_material = SubResource("ParticleProcessMaterial_osbdv")
 draw_pass_1 = SubResource("QuadMesh_mu5w2")
+
+[node name="EarthParticles" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+material_override = SubResource("StandardMaterial3D_gl556")
+amount = 120
+process_material = SubResource("ParticleProcessMaterial_b1437")
+draw_pass_1 = SubResource("BoxMesh_3wqeg")
 
 [node name="RayCast3D" type="RayCast3D" parent="."]
 collide_with_areas = true

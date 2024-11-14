@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://bcqugkompqm6t"]
+
+[ext_resource type="Script" path="res://scripts/text_area.gd" id="1_svqj6"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gabd4"]
+size = Vector3(8, 2, 3)
+
+[node name="TextArea" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+script = ExtResource("1_svqj6")
+text = "[center]That part of the world... which is the most solid support of nature, as bones are in a living creature, is called the [b]earth[/b].[/center]"
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1.5, 1)
+shape = SubResource("BoxShape3D_gabd4")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

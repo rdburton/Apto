@@ -8,6 +8,7 @@ class_name Player extends CharacterBody3D
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var fire_particles: GPUParticles3D = $FireParticles
 @onready var water_particles: GPUParticles3D = $WaterParticles
+@onready var earth_particles: GPUParticles3D = $EarthParticles
 @onready var marker_light: SpotLight3D = $MarkerLight
 @onready var camera_pivot: Node3D = %CameraPivot
 
@@ -15,10 +16,12 @@ var dash_counter := 0
 var total_dashes := 1
 var movement_weight := 1.0
 var zoom_camera := false
+var is_dashing := false
 var has_double_dashed := false
 var is_bouncing := false
 var is_ablaze := false
 var is_water := false
+var is_earth := false
 var is_playing_loop := false
 var is_completed := false
 var current_speed : float
@@ -54,11 +57,14 @@ func _physics_process(delta: float) -> void:
 		velocity.x = lerp(velocity.x, move_toward(velocity.x, 0, current_speed), movement_weight)
 		velocity.z = lerp(velocity.z, move_toward(velocity.z, 0, current_speed), movement_weight)
 
+	
 	if is_on_floor():
 		marker_light.visible = false
 		if velocity.y <= 0:
 			is_bouncing = false
 			dash_counter = 0
+		if is_dashing:
+			is_dashing = false
 			
 	# Add the gravity.
 	if not is_on_floor():
@@ -68,13 +74,15 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_just_pressed("air_dash") and !has_double_dashed:
 			if dash_counter < total_dashes:
 				if velocity.length() > 0:
+					is_dashing = true
 					var velocity_horizontal = Vector3(velocity.x, 0.0, velocity.z)
 					var velocity_direction = velocity_horizontal.normalized()
 					velocity += lerp(velocity_direction, direction * dash_power, 1.0)
 					dash_counter += 1
-
+					
 	move_and_slide()
 	
+	#Check if the player is trying to push a PushBlock and allow them to push it
 	for i in range(get_slide_collision_count()):
 		var collision = get_slide_collision(i)
 		var collider = collision.get_collider()
@@ -151,6 +159,11 @@ func emit_particles() -> void:
 		water_particles.emitting = true
 	else:
 		water_particles.emitting = false
+		
+	if is_earth:
+		earth_particles.emitting = true
+	else:
+		earth_particles.emitting = false
 
 func check_raycast() -> void:
 	var collider = ray_cast_3d.get_collider()

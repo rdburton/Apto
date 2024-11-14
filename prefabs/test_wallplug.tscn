@@ -1,0 +1,46 @@
+[gd_scene load_steps=6 format=3 uid="uid://bm1kicyr86sju"]
+
+[ext_resource type="Texture2D" uid="uid://dnjx4hlgcmtsq" path="res://materials/prototype-texture-with-size.png" id="1_0pymt"]
+[ext_resource type="PackedScene" uid="uid://kiv26w1oon5s" path="res://prefabs/earth/plug_block.tscn" id="2_cksqg"]
+[ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="3_5svom"]
+[ext_resource type="Script" path="res://scripts/plug_manager.gd" id="4_qx8yk"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_efvg7"]
+albedo_texture = ExtResource("1_0pymt")
+uv1_triplanar = true
+
+[node name="Node3D" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+material_override = SubResource("StandardMaterial3D_efvg7")
+use_collision = true
+size = Vector3(20, 1, 20)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -3.5)
+material_override = SubResource("StandardMaterial3D_efvg7")
+use_collision = true
+size = Vector3(20, 7, 3)
+
+[node name="PlugBlock" parent="." instance=ExtResource("2_cksqg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2, 0)
+
+[node name="PlugBlock2" parent="." instance=ExtResource("2_cksqg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2, 0)
+
+[node name="PlugBlock3" parent="." instance=ExtResource("2_cksqg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, -4)
+anim_finished = true
+
+[node name="Player" parent="." groups=["Player"] instance=ExtResource("3_5svom")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1, 9)
+
+[node name="PlugManager" type="Node" parent="." node_paths=PackedStringArray("wall_plug01", "wall_plug02", "main_plug")]
+script = ExtResource("4_qx8yk")
+wall_plug01 = NodePath("../PlugBlock")
+wall_plug02 = NodePath("../PlugBlock3")
+main_plug = NodePath("../PlugBlock2")

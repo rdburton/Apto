@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://c4ijcrg56oes"]
+[gd_scene load_steps=30 format=3 uid="uid://c4ijcrg56oes"]
 
 [ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="1_wxgb5"]
 [ext_resource type="Shader" path="res://shaders/water_main_shader.gdshader" id="3_wbg1d"]
@@ -8,11 +8,19 @@
 [ext_resource type="PackedScene" uid="uid://bhc8ej1tqup3b" path="res://prefabs/fire/fire_lever.tscn" id="8_y4fu4"]
 [ext_resource type="PackedScene" uid="uid://exighxogygqx" path="res://prefabs/fire/fire_elevator.tscn" id="9_esncs"]
 [ext_resource type="PackedScene" uid="uid://buwsntndf8lfq" path="res://prefabs/fire/fire_door.tscn" id="10_h5ta8"]
+[ext_resource type="Script" path="res://scripts/earth/wall_plugs.gd" id="11_0dwyg"]
 [ext_resource type="PackedScene" uid="uid://pbosu7nrffl6" path="res://prefabs/water/water_pit.tscn" id="11_qw116"]
 [ext_resource type="PackedScene" uid="uid://bpnfbsquvy208" path="res://prefabs/earth/push_block.tscn" id="12_6hcw1"]
 [ext_resource type="PackedScene" uid="uid://dj5v04e7lb370" path="res://prefabs/earth/push_block_rest.tscn" id="12_c28an"]
 [ext_resource type="PackedScene" uid="uid://dtuhnroda8knw" path="res://prefabs/water/water_stream.tscn" id="12_ooi4x"]
 [ext_resource type="PackedScene" uid="uid://cdsi4krmf73ki" path="res://prefabs/platform.tscn" id="13_100v7"]
+[ext_resource type="PackedScene" uid="uid://wmdgdw0icqhx" path="res://prefabs/earth/earth_pit.tscn" id="13_ut6xf"]
+[ext_resource type="PackedScene" uid="uid://dhgtgrulvucdb" path="res://prefabs/earth/stone_steps.tscn" id="14_6b5bo"]
+[ext_resource type="PackedScene" uid="uid://br4pdr4p4ukac" path="res://prefabs/earth/stone_door.tscn" id="15_540u7"]
+[ext_resource type="PackedScene" uid="uid://4omf12pki1w" path="res://prefabs/earth/stone_blockade.tscn" id="17_mnyk8"]
+[ext_resource type="PackedScene" uid="uid://dj48ildtay2in" path="res://prefabs/earth/smasher.tscn" id="18_8v4ol"]
+[ext_resource type="PackedScene" uid="uid://dxkb34wje105t" path="res://prefabs/earth/falling_platform.tscn" id="19_esdm3"]
+[ext_resource type="PackedScene" uid="uid://kiv26w1oon5s" path="res://prefabs/earth/plug_block.tscn" id="20_ja7en"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mct75"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -75,16 +83,31 @@ void fragment()
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1peak"]
 render_priority = 0
 shader = SubResource("Shader_360c6")
-shader_parameter/roughness = null
-shader_parameter/metallic = null
-shader_parameter/color_start = Color(0.921569, 0.380392, 0, 1)
-shader_parameter/color_end = Color(0.77, 0.320833, 0, 1)
+shader_parameter/roughness = 1.0
+shader_parameter/metallic = 0.0
+shader_parameter/color_start = Color(0.399612, 0.618535, 0.291209, 1)
+shader_parameter/color_end = Color(0.320399, 0.502172, 0.279605, 1)
 shader_parameter/gradient_dir = Vector3(0, 1, 0)
 shader_parameter/min_value = -1.0
 shader_parameter/max_value = 1.0
 shader_parameter/start_color = Color(1, 1, 1, 1)
 shader_parameter/end_color = Color(1, 1, 1, 1)
-shader_parameter/near_distance = 10.0
+shader_parameter/near_distance = 50.0
+shader_parameter/far_distance = 100.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_evftt"]
+render_priority = 0
+shader = SubResource("Shader_360c6")
+shader_parameter/roughness = null
+shader_parameter/metallic = null
+shader_parameter/color_start = Color(0.64, 0.2448, 0.224, 1)
+shader_parameter/color_end = Color(0.47, 0.35015, 0.3102, 1)
+shader_parameter/gradient_dir = Vector3(0, 1, 0)
+shader_parameter/min_value = -1.0
+shader_parameter/max_value = 1.0
+shader_parameter/start_color = Color(1, 1, 1, 1)
+shader_parameter/end_color = Color(1, 1, 1, 1)
+shader_parameter/near_distance = 20.0
 shader_parameter/far_distance = 50.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sc206"]
@@ -127,7 +150,7 @@ transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75
 shadow_enabled = true
 
 [node name="Player" parent="." groups=["Player"] instance=ExtResource("1_wxgb5")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 1.6, 21)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 1.6, 21)
 
 [node name="World" type="Node3D" parent="."]
 
@@ -146,11 +169,159 @@ use_collision = true
 size = Vector3(11, 1, 9)
 
 [node name="Ground3" type="CSGBox3D" parent="World/Space01"]
-transform = Transform3D(-1.31134e-08, 0, -1, 0, 1, 0, 0.3, 0, -4.37114e-08, 24.1, 0, 10.4)
+transform = Transform3D(-1.31134e-08, 0, -1, 0, 1, 0, 0.3, 0, -4.37114e-08, 24.1, 0, 18.5)
 material_override = SubResource("ShaderMaterial_1peak")
 use_collision = true
 collision_layer = 33
-size = Vector3(78, 1, 29)
+size = Vector3(132, 1, 29)
+
+[node name="Ground5" type="CSGBox3D" parent="World/Space01"]
+transform = Transform3D(-1.31134e-08, 0, -1, 0, 1, 0, 0.3, 0, -4.37114e-08, 34.6, 3.5, 14.45)
+material_override = SubResource("ShaderMaterial_1peak")
+use_collision = true
+collision_layer = 33
+size = Vector3(17, 6, 8)
+
+[node name="Ground4" type="CSGBox3D" parent="World/Space01"]
+transform = Transform3D(-1.31134e-08, 0, -1, 0, 1, 0, 0.3, 0, -4.37114e-08, 24.6, -1.5, 79.55)
+material_override = SubResource("ShaderMaterial_evftt")
+use_collision = true
+collision_layer = 33
+size = Vector3(13, 4, 4)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="World/Space01"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0.55, 13.5)
+use_collision = true
+collision_layer = 4
+collision_mask = 4
+size = Vector3(0.2, 0.2, 8)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="World/Space01"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5, 0.55, 13.5)
+use_collision = true
+collision_layer = 4
+collision_mask = 4
+size = Vector3(0.2, 0.2, 8)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="World/Space01"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0.55, 13.35)
+use_collision = true
+collision_layer = 4
+collision_mask = 4
+size = Vector3(0.2, 0.2, 8.3)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="World/Space01"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.5, 0.55, 16)
+use_collision = true
+collision_layer = 4
+collision_mask = 4
+size = Vector3(0.2, 0.2, 3)
+
+[node name="CSGBox3D10" type="CSGBox3D" parent="World/Space01"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.5, 0.55, 10.7)
+use_collision = true
+collision_layer = 4
+collision_mask = 4
+size = Vector3(0.2, 0.2, 3)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="World/Space01"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 26.1, 0.55, 14.6)
+use_collision = true
+collision_layer = 4
+collision_mask = 4
+size = Vector3(0.2, 0.2, 3)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="World/Space01"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 26.1, 0.55, 12.1)
+use_collision = true
+collision_layer = 4
+collision_mask = 4
+size = Vector3(0.2, 0.2, 3)
+
+[node name="PushBlockRest" parent="World/Space01" instance=ExtResource("12_c28an")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 17.4, 0.55, 8)
+block_name = "One"
+
+[node name="IdentifierTorus" parent="World/Space01/PushBlockRest" index="5"]
+visible = true
+
+[node name="EarthPit" parent="World/Space01/PushBlockRest" instance=ExtResource("13_ut6xf")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 14, -0.05, -7.6)
+
+[node name="PushBlock" parent="World/Space01" instance=ExtResource("12_6hcw1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.25, 1.5, 17)
+block_name = "One"
+
+[node name="IdentifierTorus" parent="World/Space01/PushBlock" index="6"]
+visible = true
+
+[node name="PushBlock3" parent="World/Space01" instance=ExtResource("12_6hcw1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.3, 1.5, 17)
+block_name = "One"
+
+[node name="IdentifierCube" parent="World/Space01/PushBlock3" index="3"]
+visible = true
+
+[node name="PushBlock2" parent="World/Space01" instance=ExtResource("12_6hcw1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.4, 1.5, 13.3)
+block_name = "Two"
+
+[node name="IdentifierSphere" parent="World/Space01/PushBlock2" index="4"]
+visible = true
+
+[node name="PushBlockRest2" parent="World/Space01" instance=ExtResource("12_c28an")]
+transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, 28.6, 0.55, 13.3)
+block_name = "Two"
+
+[node name="IdentifierSphere" parent="World/Space01/PushBlockRest2" index="3"]
+visible = true
+
+[node name="PushBlockRest3" parent="World/Space01" instance=ExtResource("12_c28an")]
+transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, 23.2, 0.55, 8.1)
+block_name = "One"
+
+[node name="IdentifierCube" parent="World/Space01/PushBlockRest3" index="2"]
+visible = true
+
+[node name="StoneDoor" parent="World/Space01" node_paths=PackedStringArray("push_block_rest") instance=ExtResource("15_540u7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.919, 0.5, 1.96496)
+push_block_rest = [NodePath("../PushBlockRest")]
+
+[node name="StoneSteps" parent="World/Space01" node_paths=PackedStringArray("push_block_rest") instance=ExtResource("14_6b5bo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 1, 7)
+push_block_rest = [NodePath("../PushBlockRest3"), NodePath("../PushBlockRest2")]
+
+[node name="Smasher" parent="World/Space01" instance=ExtResource("18_8v4ol")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.2, 0.6, 20.5)
+wait_time = 1.0
+
+[node name="Smasher3" parent="World/Space01" instance=ExtResource("18_8v4ol")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.2, 0.6, 36.5)
+wait_time = 1.5
+
+[node name="Smasher2" parent="World/Space01" instance=ExtResource("18_8v4ol")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 0.6, 20.5)
+wait_time = 0.5
+
+[node name="StoneBlockade" parent="World/Space01" instance=ExtResource("17_mnyk8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34, 1, 0)
+
+[node name="FallingPlatform" parent="World/Space01" instance=ExtResource("19_esdm3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 1.1, 37)
+
+[node name="PlugBlock" parent="World/Space01" instance=ExtResource("20_ja7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 2, 19.4)
+
+[node name="PlugBlock3" parent="World/Space01" instance=ExtResource("20_ja7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.6, 2, 19.4)
+
+[node name="PlugBlock2" parent="World/Space01" instance=ExtResource("20_ja7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37, 2, 15.4)
+anim_finished = true
+
+[node name="WallPlugs" type="Node3D" parent="World/Space01"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37, 2, 19.4)
+script = ExtResource("11_0dwyg")
 
 [node name="Space02" type="Node3D" parent="World"]
 
@@ -228,94 +399,20 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.7, -1)
 
 [node name="WaterStream" parent="World/Space02" node_paths=PackedStringArray("block", "destination") instance=ExtResource("12_ooi4x")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -1.5)
-block = NodePath("../../../WaterBlock")
-destination = NodePath("../../../WaterBlockDes")
+block = NodePath("../WaterBlock")
+destination = NodePath("../WaterBlockDes")
 move_speed = 1.0
 
-[node name="WaterBlock" parent="." instance=ExtResource("13_100v7")]
+[node name="WaterBlock" parent="World/Space02" instance=ExtResource("13_100v7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, -0.3, -1.4)
 
-[node name="WaterBlockDes" type="Node3D" parent="."]
+[node name="WaterBlockDes" type="Node3D" parent="World/Space02"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19, 0, -1.5)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0.55, 13.5)
-use_collision = true
-collision_layer = 4
-collision_mask = 4
-size = Vector3(0.2, 0.2, 8)
-
-[node name="CSGBox3D5" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5, 0.55, 13.5)
-use_collision = true
-collision_layer = 4
-collision_mask = 4
-size = Vector3(0.2, 0.2, 8)
-
-[node name="CSGBox3D6" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0.55, 13.35)
-use_collision = true
-collision_layer = 4
-collision_mask = 4
-size = Vector3(0.2, 0.2, 8.3)
-
-[node name="CSGBox3D7" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.5, 0.55, 16)
-use_collision = true
-collision_layer = 4
-collision_mask = 4
-size = Vector3(0.2, 0.2, 3)
-
-[node name="CSGBox3D10" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.5, 0.55, 10.7)
-use_collision = true
-collision_layer = 4
-collision_mask = 4
-size = Vector3(0.2, 0.2, 3)
-
-[node name="CSGBox3D8" type="CSGBox3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 26.1, 0.55, 14.6)
-use_collision = true
-collision_layer = 4
-collision_mask = 4
-size = Vector3(0.2, 0.2, 3)
-
-[node name="CSGBox3D9" type="CSGBox3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 26.1, 0.55, 12.1)
-use_collision = true
-collision_layer = 4
-collision_mask = 4
-size = Vector3(0.2, 0.2, 3)
-
-[node name="CSGBox3D4" type="CSGBox3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 17.2, 2, 5.5)
-use_collision = true
-collision_layer = 4
-collision_mask = 4
-size = Vector3(0.5, 3, 3)
-
-[node name="PushBlockRest" parent="." instance=ExtResource("12_c28an")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 17.4, 0.55, 8)
-block_name = "One"
-
-[node name="PushBlock" parent="." instance=ExtResource("12_6hcw1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.25, 1.5, 17)
-block_name = "One"
-
-[node name="PushBlock2" parent="." instance=ExtResource("12_6hcw1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.4, 1.5, 13.3)
-block_name = "Two"
-
-[node name="PushBlock3" parent="." instance=ExtResource("12_6hcw1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.3, 1.5, 17)
-block_name = "One"
-
-[node name="PushBlockRest2" parent="." instance=ExtResource("12_c28an")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 28.6, 0.55, 13.3)
-block_name = "Two"
-
-[node name="PushBlockRest3" parent="." instance=ExtResource("12_c28an")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 23.2, 0.55, 8.1)
-block_name = "One"
-
 [editable path="Player"]
+[editable path="World/Space01/PushBlockRest"]
+[editable path="World/Space01/PushBlock"]
+[editable path="World/Space01/PushBlock3"]
+[editable path="World/Space01/PushBlock2"]
+[editable path="World/Space01/PushBlockRest2"]
+[editable path="World/Space01/PushBlockRest3"]

@@ -1,0 +1,152 @@
+[gd_scene load_steps=15 format=3 uid="uid://kiv26w1oon5s"]
+
+[ext_resource type="Script" path="res://scripts/earth/plug_block.gd" id="1_1yhls"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3venx"]
+albedo_color = Color(0.568627, 0.529412, 0.529412, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qobh5"]
+size = Vector3(2, 2, 0.1)
+
+[sub_resource type="Animation" id="Animation_i1gv0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_nhxpq"]
+resource_name = "main"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6, 1.5),
+"transitions": PackedFloat32Array(-2, -2, 0.5),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, -3), Vector3(0, 0, -4)]
+}
+
+[sub_resource type="Animation" id="Animation_777hq"]
+resource_name = "reverse"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(-0.5, -0.5),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, 4)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_owgu0"]
+_data = {
+"RESET": SubResource("Animation_i1gv0"),
+"main": SubResource("Animation_nhxpq"),
+"reverse": SubResource("Animation_777hq")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gcj2r"]
+transparency = 1
+depth_draw_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="Curve" id="Curve_2yb2x"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.428571), -1.8961, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_53hd8"]
+curve = SubResource("Curve_2yb2x")
+
+[sub_resource type="Curve" id="Curve_dkrdx"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.853881, 0), -2.65555, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_at5vq"]
+curve = SubResource("Curve_dkrdx")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_0p4aj"]
+angle_min = -45.0
+angle_max = 45.0
+direction = Vector3(0, 0, 1)
+spread = 90.0
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+angular_velocity_min = 100.0
+angular_velocity_max = 100.0
+radial_velocity_min = 0.999978
+radial_velocity_max = 0.999978
+gravity = Vector3(0, 0, 0)
+damping_min = 2.0
+damping_max = 2.0
+scale_curve = SubResource("CurveTexture_at5vq")
+alpha_curve = SubResource("CurveTexture_53hd8")
+hue_variation_min = -2.23517e-08
+hue_variation_max = -2.23517e-08
+turbulence_noise_strength = 0.84
+turbulence_noise_scale = 0.373
+turbulence_noise_speed = Vector3(0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_kwmny"]
+
+[node name="PlugBlock" type="Node3D"]
+script = ExtResource("1_1yhls")
+
+[node name="Body" type="Node3D" parent="."]
+
+[node name="Diamond" type="CSGBox3D" parent="Body"]
+transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, 2.05411)
+use_collision = true
+
+[node name="Rectangle" type="CSGBox3D" parent="Body"]
+material_override = SubResource("StandardMaterial3D_3venx")
+use_collision = true
+size = Vector3(2, 2, 5)
+
+[node name="Area3D" type="Area3D" parent="Body"]
+transform = Transform3D(0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Body/Area3D"]
+transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, 2.55)
+shape = SubResource("BoxShape3D_qobh5")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_owgu0")
+}
+
+[node name="SmokeParticles" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6)
+material_override = SubResource("StandardMaterial3D_gcj2r")
+custom_aabb = AABB(-10000, -10000, -10000, 20000, 20000, 20000)
+emitting = false
+amount = 20
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-10000, -10000, -10000, 20000, 20000, 20000)
+process_material = SubResource("ParticleProcessMaterial_0p4aj")
+draw_pass_1 = SubResource("SphereMesh_kwmny")
+
+[connection signal="body_entered" from="Body/Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Body/Area3D" to="." method="_on_area_3d_body_exited"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[connection signal="animation_started" from="AnimationPlayer" to="." method="_on_animation_player_animation_started"]
