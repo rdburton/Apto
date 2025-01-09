@@ -11,7 +11,9 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	rotate_camera(delta)
-
+	if rotation.y > 6.28:
+		rotation.y = 0
+	
 func rotate_camera(delta: float) -> void:
 	if player.rotate_camera:
 		target_rotation += deg_to_rad(rotation_in_degrees)
@@ -21,3 +23,4 @@ func rotate_camera(delta: float) -> void:
 
 	current_rotation = lerp_angle(current_rotation, target_rotation, rotation_speed * delta)
 	rotation.y = current_rotation
+	

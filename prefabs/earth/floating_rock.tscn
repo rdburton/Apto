@@ -125,7 +125,7 @@ _data = {
 }
 
 [node name="Ground3" type="CSGBox3D"]
-transform = Transform3D(0.707107, -0.707107, 0, 0.579228, 0.579228, 0.573576, -0.405579, -0.40558, 0.819152, 0, 5.4, -2)
+transform = Transform3D(0.707107, -0.707107, 0, 0.579228, 0.579228, 0.573576, -0.40558, -0.40558, 0.819152, 0, 5.4, -2)
 material_override = SubResource("ShaderMaterial_np11t")
 use_collision = true
 size = Vector3(1.5, 1.5, 1.5)

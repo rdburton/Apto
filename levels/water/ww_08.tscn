@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://ngv2tutvwhpu" path="res://prefabs/water/bounce_pad.tscn" id="8_2crj1"]
 [ext_resource type="Shader" path="res://shaders/water_stream.gdshader" id="8_4m3mx"]
 [ext_resource type="Texture2D" uid="uid://bbewndpas8t7b" path="res://alphas/RainSplash.png" id="9_prvra"]
-[ext_resource type="Shader" path="res://shaders/water_main_shader.gdshader" id="11_x1fvb"]
+[ext_resource type="Shader" path="res://shaders/main_shader.gdshader" id="11_x1fvb"]
 [ext_resource type="PackedScene" uid="uid://5fiffs5ee8yn" path="res://prefabs/water/water_base.tscn" id="13_u5oxx"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bdqbd"]

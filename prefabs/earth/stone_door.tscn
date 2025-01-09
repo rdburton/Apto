@@ -233,12 +233,4 @@ amount = 240
 process_material = SubResource("ParticleProcessMaterial_7voav")
 draw_pass_1 = SubResource("BoxMesh_lopmu")
 
-[node name="GroundParticles2" type="GPUParticles3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
-material_override = SubResource("StandardMaterial3D_8egmy")
-emitting = false
-amount = 240
-process_material = SubResource("ParticleProcessMaterial_7voav")
-draw_pass_1 = SubResource("BoxMesh_lopmu")
-
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

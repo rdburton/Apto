@@ -3,6 +3,7 @@ render_mode blend_mix, depth_prepass_alpha;
 
 uniform float roughness : hint_range(0.0, 1.0, 0.1);
 uniform float metallic : hint_range(0.0, 1.0, 0.1);
+uniform float dissolve_amount : hint_range(0.0, 1.0, 0.1);
 
 group_uniforms Gradient;
 uniform vec4 color_start : source_color = vec4(0.14, 0.63, 0.68, 1.0);
@@ -36,7 +37,7 @@ void fragment()
 	vec4 final_color = mix(gradient_color,  fade_color, 0.5);
 
 	ALBEDO = final_color.rgb;
-	ALPHA = final_color.a;
+	ALPHA = mix(1.0, 0.0, dissolve_amount);
 	ROUGHNESS = roughness;
 	METALLIC = metallic;
 }

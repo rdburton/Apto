@@ -23,10 +23,8 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 				var global_impact = block.global_basis * impact
 				block.freeze = false
 				block.apply_central_impulse(global_impact)
-				
-func _on_area_3d_body_exited(body: Node3D) -> void:
-	if has_impacted:
-		area_3d.queue_free()
+			area_3d.queue_free()
+			
 
 func _delete_blocks() -> void:
 	for block in blocks:

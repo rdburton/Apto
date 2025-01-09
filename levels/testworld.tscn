@@ -1,7 +1,7 @@
-[gd_scene load_steps=30 format=3 uid="uid://c4ijcrg56oes"]
+[gd_scene load_steps=32 format=3 uid="uid://c4ijcrg56oes"]
 
 [ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="1_wxgb5"]
-[ext_resource type="Shader" path="res://shaders/water_main_shader.gdshader" id="3_wbg1d"]
+[ext_resource type="Shader" path="res://shaders/main_shader.gdshader" id="3_wbg1d"]
 [ext_resource type="PackedScene" uid="uid://v0gna4xi7mil" path="res://prefabs/camera/camera_zoom.tscn" id="4_7iq21"]
 [ext_resource type="PackedScene" uid="uid://ngv2tutvwhpu" path="res://prefabs/water/bounce_pad.tscn" id="4_tu6tx"]
 [ext_resource type="PackedScene" uid="uid://b24hiv1diqatt" path="res://prefabs/fire/fire_pit.tscn" id="7_tt1oa"]
@@ -13,7 +13,6 @@
 [ext_resource type="PackedScene" uid="uid://bpnfbsquvy208" path="res://prefabs/earth/push_block.tscn" id="12_6hcw1"]
 [ext_resource type="PackedScene" uid="uid://dj5v04e7lb370" path="res://prefabs/earth/push_block_rest.tscn" id="12_c28an"]
 [ext_resource type="PackedScene" uid="uid://dtuhnroda8knw" path="res://prefabs/water/water_stream.tscn" id="12_ooi4x"]
-[ext_resource type="PackedScene" uid="uid://cdsi4krmf73ki" path="res://prefabs/platform.tscn" id="13_100v7"]
 [ext_resource type="PackedScene" uid="uid://wmdgdw0icqhx" path="res://prefabs/earth/earth_pit.tscn" id="13_ut6xf"]
 [ext_resource type="PackedScene" uid="uid://dhgtgrulvucdb" path="res://prefabs/earth/stone_steps.tscn" id="14_6b5bo"]
 [ext_resource type="PackedScene" uid="uid://br4pdr4p4ukac" path="res://prefabs/earth/stone_door.tscn" id="15_540u7"]
@@ -21,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://dj48ildtay2in" path="res://prefabs/earth/smasher.tscn" id="18_8v4ol"]
 [ext_resource type="PackedScene" uid="uid://dxkb34wje105t" path="res://prefabs/earth/falling_platform.tscn" id="19_esdm3"]
 [ext_resource type="PackedScene" uid="uid://kiv26w1oon5s" path="res://prefabs/earth/plug_block.tscn" id="20_ja7en"]
+[ext_resource type="Script" path="res://scripts/platform.gd" id="21_o2vv5"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mct75"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -115,6 +115,7 @@ render_priority = 0
 shader = ExtResource("3_wbg1d")
 shader_parameter/roughness = null
 shader_parameter/metallic = null
+shader_parameter/dissolve_amount = null
 shader_parameter/color_start = Color(0.164881, 0.694291, 0.870171, 1)
 shader_parameter/color_end = Color(0.363708, 0.859203, 0.670159, 1)
 shader_parameter/gradient_dir = Vector3(0, 1, 0)
@@ -130,6 +131,7 @@ render_priority = 0
 shader = ExtResource("3_wbg1d")
 shader_parameter/roughness = null
 shader_parameter/metallic = null
+shader_parameter/dissolve_amount = null
 shader_parameter/color_start = Color(0.364706, 0.858824, 0.670588, 1)
 shader_parameter/color_end = Color(0.164706, 0.694118, 0.870588, 1)
 shader_parameter/gradient_dir = Vector3(0, 1, 0)
@@ -140,6 +142,12 @@ shader_parameter/end_color = Color(0, 0, 0, 0)
 shader_parameter/near_distance = 0.0
 shader_parameter/far_distance = 50.0
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_41blp"]
+albedo_color = Color(0.568627, 0.529412, 0.529412, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k17ak"]
+size = Vector3(2, 6, 2)
+
 [node name="TESTWORLD" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -149,7 +157,7 @@ environment = SubResource("Environment_jjmam")
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Player" parent="." groups=["Player"] instance=ExtResource("1_wxgb5")]
+[node name="Player" parent="." instance=ExtResource("1_wxgb5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 1.6, 21)
 
 [node name="World" type="Node3D" parent="."]
@@ -403,8 +411,21 @@ block = NodePath("../WaterBlock")
 destination = NodePath("../WaterBlockDes")
 move_speed = 1.0
 
-[node name="WaterBlock" parent="World/Space02" instance=ExtResource("13_100v7")]
+[node name="WaterBlock" type="Node3D" parent="World/Space02"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, -0.3, -1.4)
+script = ExtResource("21_o2vv5")
+
+[node name="Block" type="CSGBox3D" parent="World/Space02/WaterBlock"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+material_override = SubResource("StandardMaterial3D_41blp")
+use_collision = true
+size = Vector3(2, 6, 2)
+
+[node name="Area3D" type="Area3D" parent="World/Space02/WaterBlock"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Space02/WaterBlock/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("BoxShape3D_k17ak")
 
 [node name="WaterBlockDes" type="Node3D" parent="World/Space02"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19, 0, -1.5)

@@ -1,11 +1,14 @@
-extends Node3D
+class_name RuneCube extends Node3D
 
+@export var rune_name : String
 @export var text : String
 var text_label
 var panel
 var activated := false
 var deactivate := false
 var fade_speed := 0.8
+
+@onready var rune_cube: CSGBox3D = $RuneCube
 
 func _process(delta: float) -> void:
 	if activated and panel:
@@ -28,11 +31,7 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 		if text_label:
 			text_label.visible = true
 			text_label.text = text
+		rune_cube.queue_free()
 		
-		await get_tree().create_timer(8).timeout
+		await get_tree().create_timer(4).timeout
 		deactivate = true
-		
-func _on_area_3d_body_exited(body: Node3D) -> void:
-	if body.is_in_group("Player"):
-		await get_tree().create_timer(9).timeout
-		queue_free()

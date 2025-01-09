@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="1_6lqy3"]
 [ext_resource type="Texture2D" uid="uid://dnjx4hlgcmtsq" path="res://materials/prototype-texture-with-size.png" id="3_k633o"]
-[ext_resource type="Shader" path="res://shaders/water_main_shader.gdshader" id="3_l4qts"]
+[ext_resource type="Shader" path="res://shaders/main_shader.gdshader" id="3_l4qts"]
 [ext_resource type="PackedScene" uid="uid://c0ffp18hq14mj" path="res://prefabs/goal.tscn" id="4_2u8q5"]
 [ext_resource type="PackedScene" uid="uid://dl3kebpuep0yu" path="res://prefabs/moving_block.tscn" id="5_um12q"]
 [ext_resource type="PackedScene" uid="uid://ngv2tutvwhpu" path="res://prefabs/water/bounce_pad.tscn" id="6_gpocu"]

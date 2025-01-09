@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://dhgtgrulvucdb"]
 
-[ext_resource type="Script" path="res://scripts/earth/stone_door.gd" id="1_scc7m"]
+[ext_resource type="Script" path="res://scripts/earth/stone_steps.gd" id="1_vuk8j"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yktms"]
 albedo_color = Color(0.72, 0.6696, 0.6696, 1)
@@ -139,7 +139,7 @@ hue_variation_max = 0.1
 [sub_resource type="BoxMesh" id="BoxMesh_d06qv"]
 
 [node name="StoneSteps" type="Node3D" node_paths=PackedStringArray("particle_effects")]
-script = ExtResource("1_scc7m")
+script = ExtResource("1_vuk8j")
 particle_effects = [NodePath("GroundParticles"), NodePath("GroundParticles2"), NodePath("GroundParticles3")]
 end_times = Array[float]([1.0, 2.0, 3.0])
 

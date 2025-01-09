@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://crfiwo87ci14d"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0uyh7"]
+albedo_color = Color(0.63, 0.4599, 0.4599, 1)
+emission_enabled = true
+emission = Color(0.215686, 0.701961, 0.172549, 1)
+
+[node name="RuneCube" type="CSGBox3D"]
+transform = Transform3D(0.707107, -0.707107, -1.59075e-07, 0.5, 0.5, -0.707107, 0.5, 0.5, 0.707107, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_0uyh7")
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 2.98023e-08, 1.78814e-07, 7.45058e-08, 1, 5.96046e-08, -1.19209e-07, 2.98023e-08, 1, 0.35, 0.35, -0.494975)
+light_color = Color(0.215686, 0.701961, 0.172549, 1)
+omni_attenuation = 2.0

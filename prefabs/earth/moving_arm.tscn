@@ -1,0 +1,93 @@
+[gd_scene load_steps=7 format=3 uid="uid://dev56wy7yy2ap"]
+
+[ext_resource type="Script" path="res://scripts/earth/moving_arm.gd" id="1_byaxx"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0u8jq"]
+albedo_color = Color(0.309804, 0.243137, 0.243137, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bag1u"]
+albedo_color = Color(0.568627, 0.529412, 0.529412, 1)
+
+[sub_resource type="Animation" id="Animation_gt437"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("..:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-17.5, 4.5, 6)]
+}
+
+[sub_resource type="Animation" id="Animation_ngmwj"]
+resource_name = "main"
+length = 10.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("..:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-17.5, 4.5, 6), Vector3(-15.8, 4.5, 6), Vector3(-15.8, -2.5, 6)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_flr6i"]
+_data = {
+"RESET": SubResource("Animation_gt437"),
+"main": SubResource("Animation_ngmwj")
+}
+
+[node name="MovingArm" type="Node3D"]
+transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, -1, -4.37114e-08, -4.37114e-08, -4.37114e-08, 4.37114e-08, 1, -17.5, 4.5, 6)
+script = ExtResource("1_byaxx")
+
+[node name="Ring" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 8.35187e-23, 0, 1, 3.57628e-07, 3, 0)
+material_override = SubResource("StandardMaterial3D_0u8jq")
+use_collision = true
+size = Vector3(1.1, 0.2, 1.1)
+
+[node name="Ring2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 8.35187e-23, 0, 1, 3.57628e-07, 2, 0)
+material_override = SubResource("StandardMaterial3D_0u8jq")
+use_collision = true
+size = Vector3(1.1, 0.2, 1.1)
+
+[node name="Ring3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 8.35187e-23, 0, 1, 4.76837e-07, 1, 0)
+material_override = SubResource("StandardMaterial3D_0u8jq")
+use_collision = true
+size = Vector3(1.1, 0.2, 1.1)
+
+[node name="Ring4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 8.35187e-23, 0, 1, 4.76837e-07, 0, 0)
+material_override = SubResource("StandardMaterial3D_0u8jq")
+use_collision = true
+size = Vector3(1.1, 0.2, 1.1)
+
+[node name="Ring5" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 8.35187e-23, 0, 1, 3.57628e-07, 3.5, 0)
+material_override = SubResource("StandardMaterial3D_0u8jq")
+use_collision = true
+size = Vector3(0.7, 0.2, 0.7)
+
+[node name="Mesh" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 8.35187e-23, 0, 1, 0, 0.799999, 0)
+material_override = SubResource("StandardMaterial3D_bag1u")
+use_collision = true
+size = Vector3(1, 5.5, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../Mesh")
+libraries = {
+"": SubResource("AnimationLibrary_flr6i")
+}

@@ -11,6 +11,7 @@ class_name Player extends CharacterBody3D
 @onready var earth_particles: GPUParticles3D = $EarthParticles
 @onready var marker_light: SpotLight3D = $MarkerLight
 @onready var camera_pivot: Node3D = %CameraPivot
+@onready var timer: Timer = $Timer
 
 var dash_counter := 0
 var total_dashes := 1
@@ -28,12 +29,15 @@ var current_speed : float
 var platform_velocity: Vector3 = Vector3.ZERO
 var rotate_camera := false
 var pushing_block : RigidBody3D = null
+var timed_out = false
+
 
 func _process(delta: float) -> void:
 	emit_particles()
 	death_check()
 	check_raycast()
 	handle_animations()
+	print(timer.time_left)
 	
 	
 func _physics_process(delta: float) -> void:
@@ -159,11 +163,14 @@ func emit_particles() -> void:
 		water_particles.emitting = true
 	else:
 		water_particles.emitting = false
-		
+
 	if is_earth:
 		earth_particles.emitting = true
 	else:
 		earth_particles.emitting = false
+
+	
+	
 
 func check_raycast() -> void:
 	var collider = ray_cast_3d.get_collider()
@@ -173,9 +180,9 @@ func check_raycast() -> void:
 			dash_counter = 0.0
 			if collider.get_parent().has_method("get_platform_velocity"):
 				platform_velocity = collider.get_parent().get_platform_velocity()
-				velocity += platform_velocity * 0.25
-			else:
-				platform_velocity = Vector3.ZERO
+				velocity += platform_velocity.normalized() / 2
+			#else:
+				#platform_velocity = Vector3.ZERO
 		else:
 			platform_velocity = Vector3.ZERO
 
@@ -183,5 +190,16 @@ func complete_level(next_level_file : String) -> void:
 	get_tree().change_scene_to_file(next_level_file)
 	
 func death_check()-> void:
-	if global_position.y <= -10.0:
+	if global_position.y <= -20.0:
 		get_tree().reload_current_scene()
+
+
+func _on_timer_timeout() -> void:
+	if is_earth:
+		is_earth = false
+		
+	if is_water:
+		is_water = false
+		
+	if is_ablaze:
+		is_ablaze = false

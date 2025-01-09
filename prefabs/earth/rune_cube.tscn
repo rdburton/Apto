@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://cu2u3ul3jtc3g"]
+
+[ext_resource type="Script" path="res://scripts/earth/rune_cube.gd" id="1_as74f"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0uyh7"]
+albedo_color = Color(0.63, 0.4599, 0.4599, 1)
+emission_enabled = true
+emission = Color(0.215686, 0.701961, 0.172549, 1)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_mxu4j"]
+
+[node name="RuneCube" type="Node3D"]
+transform = Transform3D(0.707107, -0.707107, -3.90806e-08, -0.183013, -0.183013, -0.965926, 0.683013, 0.683013, -0.258819, 0, 1.87476, -4.19048)
+script = ExtResource("1_as74f")
+rune_name = "RuneOne"
+text = "[center][b]Primordial[/b][br]Rune Cube Discovered[/br][/center]"
+
+[node name="RuneCube" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 1.19209e-07, -8.32261e-08, -1.19209e-07, 1, 1.4174e-07, 8.32261e-08, -1.4174e-07, 1, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_0uyh7")
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="Area3D" type="Area3D" parent="RuneCube"]
+transform = Transform3D(1, -1.78814e-07, 9.83526e-09, 1.78814e-07, 1, -9.83524e-09, -9.83526e-09, 9.83523e-09, 1, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RuneCube/Area3D"]
+shape = SubResource("SphereShape3D_mxu4j")
+
+[connection signal="body_entered" from="RuneCube/Area3D" to="." method="_on_area_3d_body_entered"]

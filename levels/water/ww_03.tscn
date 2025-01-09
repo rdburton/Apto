@@ -1,7 +1,7 @@
 [gd_scene load_steps=21 format=3 uid="uid://dpn4jgrtih0se"]
 
 [ext_resource type="PackedScene" uid="uid://di37b3061x66q" path="res://prefabs/player.tscn" id="1_b12iq"]
-[ext_resource type="Shader" path="res://shaders/water_main_shader.gdshader" id="3_se2vc"]
+[ext_resource type="Shader" path="res://shaders/main_shader.gdshader" id="3_se2vc"]
 [ext_resource type="PackedScene" uid="uid://c0ffp18hq14mj" path="res://prefabs/goal.tscn" id="4_etdxm"]
 [ext_resource type="Script" path="res://scripts/water/water_pit.gd" id="5_nduoa"]
 [ext_resource type="Texture2D" uid="uid://bbewndpas8t7b" path="res://alphas/RainSplash.png" id="6_wb51w"]
